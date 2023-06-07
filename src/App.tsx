@@ -25,10 +25,10 @@ function App() {
               <Route
                 path="/"
                 exact={true}>
-                <Redirect to={"/acceso"} />
+                <Redirect to={"/formulario"} />
               </Route>
 
-              <Route
+              {/* <Route
                 path="/acceso"
                 exact={true}
                 render={(props) => <Acceso {...props} />}
@@ -38,7 +38,7 @@ function App() {
                 path="/consulta"
                 exact={true}
                 render={(props) => <Busqueda {...props} />}
-              />
+              /> */}
 
               <Route
                 path="/formulario"
@@ -46,14 +46,9 @@ function App() {
                 render={(props) => <Formulario {...props} />}
               />
 
-              <Route
+              {/* <Route
                 path="/inicio"
                 render={(props) => <Inicio {...props} />}
-              />
-
-              {/* <Route
-                path="/control"
-                render={(props) => <Control {...props} />}
               /> */}
 
               <Route component={NotFound} />
