@@ -1,12 +1,12 @@
-docker stop intranet-upla && docker rm intranet-upla
+docker stop poder-judicial && docker rm poder-judicial
 
-docker image rm intranet-upla
+docker image rm poder-judicial
 
-docker build -t intranet-upla .
+docker build -t poder-judicial .
 
 docker run -d \
 --restart always \
---name intranet-upla \
---net=upla \
+--name poder-judicial \
+--net=luis \
 -p 5000:80 \
-intranet-upla
+poder-judicial
