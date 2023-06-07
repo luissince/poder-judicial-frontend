@@ -1,0 +1,8 @@
+<!ELEMENT svg (path+)>
+<!ATTLIST svg aria-hidden NMTOKEN #REQUIRED>
+<!ATTLIST svg className CDATA #REQUIRED>
+<!ATTLIST svg viewBox CDATA #REQUIRED>
+<!ATTLIST svg fill NMTOKEN #REQUIRED>
+<!ELEMENT path EMPTY>
+<!ATTLIST path d CDATA #REQUIRED>
+<!ATTLIST path fill NMTOKEN #REQUIRED>
