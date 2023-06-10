@@ -180,9 +180,10 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
                                 ref={refNombreSistema}
                                 value={nombreSistema}
                                 onChange={(event: ChangeEvent<HTMLSelectElement>) => {
-                                    setNombreSistema(event.target.value)
+                                    setNombreSistema(event.currentTarget.value)
                                 }}
                                 className="block w-full rounded-md border-0 px-3.5 py-0.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                <option value="">-- Seleccione --</option>
                                 <option value="SIJ">SIJ</option>
                                 <option value="WEB">WEB</option>
                             </select>
@@ -374,6 +375,7 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
                                     setDescartes(event.target.value)
                                 }}
                                 className="block w-full rounded-md border-0 px-3.5 py-0.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-xs sm:leading-6">
+                                <option value="">-- Seleccione --</option>
                                 <option value="1. ¿El mismo incidente se reproduce en otro equipo?">1. ¿El mismo incidente se reproduce en otro equipo? </option>
                                 <option value="2. ¿El mismo incidente se reproduce con otros usuarios?">2. ¿El mismo incidente se reproduce con otros usuarios? </option>
                                 <option value="3. ¿El incidente ocurre solo con un expediente?">3. ¿El incidente ocurre solo con un expediente? </option>
