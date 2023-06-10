@@ -97,17 +97,17 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
                 isOpen={isOpen}
                 onOpen={async () => {
                     const data: Formulario = {
-                        nombreSistema: "qwe",
-                        versionSistema: "qwe",
-                        usuarioNombre: "qwe",
-                        celularAxeso: "qwe",
-                        sede: "qwe",
-                        cargo: "qwe",
-                        personaReporte: "qwe",
-                        celularPersona: "qwe",
-                        fecha: "qwe",
-                        descripcion: "qwe",
-                        descartes: "qwe"
+                        nombreSistema: nombreSistema,
+                        versionSistema: versionSistema,
+                        usuarioNombre: usuarioNombre,
+                        celularAxeso: celularAxeso,
+                        sede: sede,
+                        cargo: cargo,
+                        personaReporte: personaReporte,
+                        celularPersona: celularPersona,
+                        fecha: fecha,
+                        descripcion: descripcion,
+                        descartes: descartes
                     };
                     const response = await ObtenerPdf<Blob>(data);
 
