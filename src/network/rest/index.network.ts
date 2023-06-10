@@ -3,6 +3,7 @@ import Response from '../../model/class/response.model.class';
 import Resolve from '../../model/class/resolve.model.class';
 import RestError from '../../model/class/resterror.model.class';
 import Consulta from '../../model/interfaces/soporte/consulta.mode.interfaces';
+import Formulario from '../../model/interfaces/formulario.model-interface';
 
 const instance = axios.create({
     baseURL: import.meta.env.VITE_URL_APP,
@@ -21,6 +22,14 @@ instance.interceptors.request.use((config) => {
     }
     return config;
 });
+
+export async function ObtenerPdf<Blob>(data: Formulario):Promise<Response<Blob> | RestError> {
+    return await Resolve.create<Blob>(
+        instance.post("/pdf", data, {
+            responseType: 'blob',
+        })
+    );
+}
 
 export async function LoginRest<Login>(params: object, signal = null): Promise<Response<Login> | RestError> {
     return await Resolve.create<Login>(instance.post<Login>("/Login", params, { signal: signal! }));
