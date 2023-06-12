@@ -26,7 +26,7 @@ instance.interceptors.request.use((config) => {
 export async function ObtenerPdf<Blob>(data: Formulario):Promise<Response<Blob> | RestError> {
     return await Resolve.create<Blob>(
         instance.post("/pdf", data, {
-            responseType: 'blob',
+            responseType: 'arraybuffer',
         })
     );
 }

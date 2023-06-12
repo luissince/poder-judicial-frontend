@@ -10,6 +10,7 @@ import CustomModal from "../../component/Modal.component";
 import { imageBase64 } from "../../helper/herramienta.helper";
 import Base64 from "../../model/interfaces/base64";
 import toast from "react-hot-toast";
+import PDFData from "../../model/interfaces/pdfdata.model.interface";
 
 const FormularioView = (props: RouteComponentProps<{}>) => {
     const [nombreSistema, setNombreSistema] = useState("");
@@ -42,13 +43,12 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
     const [selectedFile, setSelectedFile] = useState<File>();
 
     const [isOpen, setIsOpen] = useState(false);
-    const embedRef = useRef<HTMLEmbedElement | null>(null);
+    const iframeRef = useRef<HTMLIFrameElement>(null);
+    const [zoomLevel, setZoomLevel] = useState(100);
 
     useEffect(() => {
         return () => {
-            if (embedRef.current != null) {
-                window.URL.revokeObjectURL(embedRef.current.src);
-            }
+
         };
     }, []);
 
@@ -134,11 +134,30 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
         setIsOpen(false);
     };
 
+    const handleZoomIn = () => {
+        if (zoomLevel < 200) {
+            setZoomLevel(zoomLevel + 10);
+        }
+    };
+
+    const handleZoomOut = () => {
+        if (zoomLevel > 10) {
+            setZoomLevel(zoomLevel - 10);
+        }
+    };
+
+    const handlePrint = () => {
+        if (iframeRef.current) {
+            iframeRef.current.contentWindow?.print();
+        }
+    };
+
     return (
         <div className="isolate bg-white px-6 py-0 sm:py-1 lg:px-8">
             <CustomModal
                 isOpen={isOpen}
                 onOpen={async () => {
+                    console.log("asdasd")
                     const data: Formulario = {
                         nombreSistema: nombreSistema,
                         versionSistema: versionSistema,
@@ -157,18 +176,20 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
                     const response = await ObtenerPdf<Blob>(data);
 
                     if (response instanceof Response) {
-                        const blob = new Blob([response.data], { type: "application/pdf" });
-
-                        const url = window.URL.createObjectURL(blob);
-                        embedRef.current.src = url;
+                        const pdfBlob = new Blob([response.data], { type: "application/pdf" });
+                        const pdfUrl = URL.createObjectURL(pdfBlob);
+                        if (iframeRef.current) {
+                            iframeRef.current.src = pdfUrl;
+                        }
                     }
 
                     if (response instanceof RestError) {
+                        console.log(response.getMessage())
                         console.log(response.getMessage());
                     }
                 }}
                 onHidden={() => { }}
-                onClose={handleClose}
+                onClose={() => { }}
             >
                 <button
                     className="absolute top-2 right-2 p-2 z-[100] rounded-full bg-gray-200 hover:bg-gray-300 text-gray-800"
@@ -191,11 +212,52 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
                 </button>
                 <div className="flex items-center justify-center w-full h-full">
                     <div className="w-full p-10">
-                        <embed
-                            ref={embedRef}
-                            className="w-full h-[800px]"
-                            type="application/pdf"
-                        />
+                        <div className="relative">
+                            <div className="relative z-10">
+                                <div className="flex justify-center mb-4">
+                                    <button
+                                        className="block mr-2 rounded-md bg-indigo-600 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                        onClick={handleZoomIn}
+                                    >
+                                        Acercar <i className="bi bi-zoom-in"></i>
+                                    </button>
+                                    <button
+                                        className="block mr-2 rounded-md bg-indigo-600 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                        onClick={handleZoomOut}
+                                    >
+                                        Alejar <i className="bi bi-zoom-out"></i>
+                                    </button>
+                                    <button
+                                        className="block rounded-md bg-indigo-600 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                        onClick={handlePrint}
+                                    >
+                                        Imprimir <i className="bi bi-printer"></i>
+                                    </button>
+                                </div>
+                                <div className="flex justify-center mb-4">
+                                    <p className="mr-2">Zoom: {zoomLevel.toFixed(0)}%</p>
+                                    <input
+                                        type="range"
+                                        min={10}
+                                        max={200}
+                                        value={zoomLevel}
+                                        onChange={(e) => setZoomLevel(Number(e.target.value))}
+                                        className="w-48"
+                                    />
+                                </div>
+                                <div className="w-full overflow-auto border-2 border-indigo-500">
+                                    <iframe
+                                        ref={iframeRef}
+                                        title="PDF Viewer"
+                                        width="100%"
+                                        height="600"
+                                        frameBorder="0"
+                                        style={{ transform: `scale(${zoomLevel / 100})` }}
+                                    />
+                                </div>
+
+                            </div>
+                        </div>
                     </div>
                 </div>
             </CustomModal>
