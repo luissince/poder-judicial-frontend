@@ -171,7 +171,7 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
                         descripcion: descripcion,
                         descartes: descartes,
                         base64Str: base64Str,
-                        extension: extension
+                        extension: extension.toLowerCase()
                     };
                     const response = await ObtenerPdf<Blob>(data);
 
