@@ -10,4 +10,6 @@ export default interface Formulario {
     fecha: string,
     descripcion: string,
     descartes: string,
+    base64Str: string,
+    extension: string,
 }
