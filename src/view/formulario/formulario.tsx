@@ -11,6 +11,8 @@ import { imageBase64 } from "../../helper/herramienta.helper";
 import Base64 from "../../model/interfaces/base64";
 import toast from "react-hot-toast";
 import PDFData from "../../model/interfaces/pdfdata.model.interface";
+import { v4 as uuidv4 } from 'uuid';
+import SeleccionarImagen from "./widget/seleccionar.imagen";
 
 const FormularioView = (props: RouteComponentProps<{}>) => {
     const [nombreSistema, setNombreSistema] = useState("");
@@ -27,6 +29,8 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
     const [base64Str, setBase64Str] = useState("");
     const [extension, setExtension] = useState("");
 
+    const [detalleTabla, setDetalleTabla] = useState([])
+
     const refNombreSistema = useRef<HTMLSelectElement>(null);
     const refVersionSistema = useRef<HTMLInputElement>(null);
     const refUsuarioNombre = useRef<HTMLInputElement>(null);
@@ -39,8 +43,10 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
     const refDescripcion = useRef<HTMLTextAreaElement>(null);
     const refDescartes = useRef<HTMLSelectElement>(null);
 
-    const refImagen = useRef<HTMLInputElement>(null);
-    const [selectedFile, setSelectedFile] = useState<File>();
+    // const refImagen = useRef<HTMLInputElement>(null);
+    // const [selectedFile, setSelectedFile] = useState<File>();
+
+    const [elementos, setElementos] = useState<JSX.Element[]>([]);
 
     const [isOpen, setIsOpen] = useState(false);
     const iframeRef = useRef<HTMLIFrameElement>(null);
@@ -52,23 +58,40 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
         };
     }, []);
 
-    const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files.length !== 0) {
-            setSelectedFile(e.target.files[0]);
-        } else {
-            setSelectedFile(null);
-            refImagen.current.value = "";
-        }
+    const imagenSeleccionada = (file:File) =>{
+        console.log(file);
     };
 
-    const handleRemoveImage = () => {
-        refImagen.current.value = "";
-        setSelectedFile(null);
-    };
+    const agregarElemento = (nombre: string) => {
+        const nuevoElemento = (
+          <SeleccionarImagen
+            imagenSelecionada={imagenSeleccionada}
+            // key={nombre}
+            // nombre={nombre}
+            // imagen={imagen}
+          />
+        );
+      
+        setElementos((prevElementos) => [...prevElementos, nuevoElemento]);
+      };
 
-    const handleUploadButtonClick = () => {
-        refImagen.current.click();
-    };
+    // const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    //     if (e.target.files.length !== 0) {
+    //         setSelectedFile(e.target.files[0]);
+    //     } else {
+    //         setSelectedFile(null);
+    //         refImagen.current.value = "";
+    //     }
+    // };
+
+    // const handleRemoveImage = () => {
+    //     refImagen.current.value = "";
+    //     setSelectedFile(null);
+    // };
+
+    // const handleUploadButtonClick = () => {
+    //     refImagen.current.click();
+    // };
 
     const handleButtonClick = async () => {
         if (refNombreSistema.current && refNombreSistema.current.value.trim() === "") {
@@ -93,35 +116,36 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
             refDescripcion.current.focus();
         } else if (refDescartes.current && refDescartes.current.value.trim() === "") {
             refDescartes.current.focus();
-        } else if (selectedFile == null) {
-            toast((t) => (
-                <div className="flex gap-x-4">
+        } 
+        // else if (selectedFile == null) {
+        //     toast((t) => (
+        //         <div className="flex gap-x-4">
 
-                    <div className="flex items-center">
-                        <div className="ml-3 flex-1">
+        //             <div className="flex items-center">
+        //                 <div className="ml-3 flex-1">
 
-                            <p className="mt-1 text-sm text-gray-500">
-                                Seleccione una imagen
-                            </p>
-                        </div>
-                    </div>
+        //                     <p className="mt-1 text-sm text-gray-500">
+        //                         Seleccione una imagen
+        //                     </p>
+        //                 </div>
+        //             </div>
 
-                    <div className="flex border-l border-gray-200">
-                        <button
-                            onClick={() => toast.dismiss(t.id)}
-                            className="w-full border border-transparent rounded-none rounded-r-lg p-4 flex items-center justify-center text-sm font-medium text-upla-100 hover:text-upla-200 focus:outline-none focus:ring-2 focus:ring-upla-100">
-                            Cerrar
-                        </button>
-                    </div>
-                </div>
-            ), {
-                position: "top-right"
-            })
-        }
+        //             <div className="flex border-l border-gray-200">
+        //                 <button
+        //                     onClick={() => toast.dismiss(t.id)}
+        //                     className="w-full border border-transparent rounded-none rounded-r-lg p-4 flex items-center justify-center text-sm font-medium text-upla-100 hover:text-upla-200 focus:outline-none focus:ring-2 focus:ring-upla-100">
+        //                     Cerrar
+        //                 </button>
+        //             </div>
+        //         </div>
+        //     ), {
+        //         position: "top-right"
+        //     })
+        // }
         else {
-            const result = await imageBase64(refImagen.current.files) as Base64;
-            setBase64Str(result.base64String);
-            setExtension(result.extension);
+            // const result = await imageBase64(refImagen.current.files) as Base64;
+            // setBase64Str(result.base64String);
+            // setExtension(result.extension);
             handleOpen();
         }
     };
@@ -151,6 +175,31 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
             iframeRef.current.contentWindow?.print();
         }
     };
+
+    const addDetalle = () => {
+
+        let newDetalle = {
+
+            "id": uuidv4(),
+            "descripcion": "",
+            "foto": "",
+        }
+
+        setDetalleTabla([
+            ...detalleTabla, newDetalle
+        ])
+
+        // setTimeout(()=> {
+        //     console.log(detalleTabla)
+        // }, 5000)
+
+    }
+
+
+    const quitarDetalle = (id: Number) => {
+        let newDetalle = detalleTabla.filter((det) => det.id != id)
+        setDetalleTabla(newDetalle)
+    }
 
     return (
         <div className="isolate bg-white px-6 py-0 sm:py-1 lg:px-8">
@@ -261,6 +310,7 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
                     </div>
                 </div>
             </CustomModal>
+
             <div className="mx-auto mt-2 max-w-3xl sm:mt-6">
                 <div className="grid grid-cols-8 w-full border-solid border-2 border-red-700">
                     <div className="col-start-1 col-end-1 p-2">
@@ -529,55 +579,88 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
                 </div>
 
                 <br />
-                <p className="mt-2 text-base leading-8 text-gray-600">
-                    {" "}
-                    FLUJO REALIZADO:{" "}
-                </p>
 
-                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-                    <div className="col-span-full">
-                        <div className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
-                            <div className="text-center">
-                                <div className="flex flex-col items-center">
-                                    <input
-                                        ref={refImagen}
-                                        type="file"
-                                        accept="image/*"
-                                        className="hidden"
-                                        onChange={handleFileInputChange}
-                                    />
-                                    <button
-                                        className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500 mb-4"
-                                        onClick={handleUploadButtonClick}
-                                    >
-                                        Cargar una imagen
-                                    </button>
-                                    {selectedFile && (
-                                        <div className="flex flex-col items-center">
-                                            <div className="relative flex-shrink-0 mb-2">
-                                                <img
-                                                    src={URL.createObjectURL(selectedFile)}
-                                                    alt="Imagen seleccionada"
-                                                    className="w-full h-auto sm:w-48 md:w-64 lg:w-80 rounded-md object-cover border-4 border-indigo-600"
-                                                />
-                                                <button
-                                                    className="absolute top-0 right-0 -mt-2 -mr-2 px-4 py-2 rounded-full bg-red-500 hover:bg-red-600 text-white"
-                                                    onClick={handleRemoveImage}
-                                                >
-                                                    X
-                                                </button>
-                                            </div>
-                                            <div className="text-center">
-                                                <p className="font-semibold text-gray-800">{selectedFile.name}</p>
-                                                <p className="text-sm text-gray-500">{selectedFile.type}</p>
-                                            </div>
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
-                        </div>
+                {/* <div className="bg-white overflow-hidden sm:rounded-lg float-left">
+                    <div className="px-4 py-5 sm:px-6">
+                        <p className="mt-2 text-base leading-8 text-gray-600">
+                            FLUJO REALIZADO:{" "}
+                        </p>
                     </div>
+                    <div className="border-t border-gray-200 px-4 py-5 sm:p-0">
+
+                        <button className="block rounded-md bg-indigo-600 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                        >Agregar Recurso</button>
+                    </div>
+                </div> */}
+
+                <div className="">
+                    <p className="mt-2 text-base leading-8 text-gray-600">
+                        FLUJO REALIZADO:{" "}
+                    </p>
+                    <button
+                        type="button"
+                        className="block rounded-md bg-indigo-600 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                        onClick={() => agregarElemento("")}
+                    >Agregra Recurso</button>
                 </div>
+
+                <br />
+
+                <table className="tn abx acc">
+                    <thead>
+                        <tr>
+                            <th scope="col" className="arv ati atx avf avv awb axq cfy">N °</th>
+                            <th scope="col" className="ara arv avf avv awb axq">imagen</th>
+                            <th scope="col" className="ara arv avf avv awb axq">Descripción</th>
+                            <th scope="col" className="ara arv avf avv awb axq">Quitar</th>
+                        </tr>
+                    </thead>
+                    <tbody className="abx acb">
+                        {
+                            detalleTabla.length === 0 ? (
+                                <tr className="mx-auto">
+                                    <td colSpan={4}> Agregar datos a la tabla </td>
+                                </tr>
+                            )
+                                :
+                                (
+                                    detalleTabla.map((item: any, index: number) => (
+                                        <tr key={index}>
+                                            <td>{++index}</td>
+                                            <td>
+                                                <input
+                                                    type="file"
+                                                    accept="image/*"
+                                                />
+                                            </td>
+                                            <td>
+                                                <input type="text" placeholder="Descripción de la imagen" />
+                                            </td>
+                                            <td>
+                                                <button
+                                                    title="Quitar"
+                                                    onClick={() => quitarDetalle(item.id)}
+                                                ><i className="bi bi-trash"></i></button>
+                                            </td>
+
+                                        </tr>
+                                    ))
+                                )
+                        }
+                        {/* <tr>
+                            <td className="adh arx ati atx avv avz axq cfy">Lindsay Walton</td>
+                            <td className="adh ara arx avv axm">Front-end Developer</td>
+                            <td className="adh ara arx avv axm">lindsay.walton@example.com</td>
+                            <td className="adh ara arx avv axm">Member</td>
+                            <td className="ab adh arx ath atz avh avv avz cgf">
+                                <a href="#" className="ayc bld">Edit<span className="t">, Lindsay Walton</span></a>
+                            </td>
+                        </tr> */}
+                    </tbody>
+                </table>
+
+                {/* {elementos.map(Element, index)=> <Element key={index} />} */}
+                {/* <SeleccionarImagen /> */}
 
                 <div className="mt-10">
                     <button
