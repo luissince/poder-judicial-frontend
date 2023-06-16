@@ -66,7 +66,7 @@ const Nav = (props: Props) => {
                     </div>
                 ), {
                     position: "top-right"
-                }) 
+                })
 
                 const audio = new Audio(sound.mixkit);
                 if (audio !== undefined) {
@@ -74,7 +74,7 @@ const Nav = (props: Props) => {
                     if (promise !== undefined) {
                         promise.then(_ => {
                         }).catch(error => {
-                        
+
                         });
                     }
                 }
@@ -86,25 +86,10 @@ const Nav = (props: Props) => {
 
     return (
         <nav
-            className="
-            drop-shadow
-            bg-upla-100
-            flex 
-            left-0
-            fixed  
-            w-full 
-            font-mont 
-          border-gray-200
-            z-20 
-            h-[50px]">
+            className="drop-shadow bg-upla-100 flex left-0 fixed w-full border-gray-200 z-20 h-[50px]">
             <div
                 ref={props.refBlock}
-                className="
-                w-0
-                md:w-64      
-                bg-gray-50 
-                transition-all
-                duration-500">
+                className="w-0 md:w-64 bg-gray-50 transition-all duration-500">
             </div>
             <button
                 onClick={props.onEventMenu}
@@ -118,9 +103,7 @@ const Nav = (props: Props) => {
                         <i className="bi bi-bell text-xl"></i>
                         <span className="absolute right-[5px] top-[2px] bg-yellow-300 text-yellow-800 text-xs font-medium px-1.5 py-0.5 rounded text-center">{noticaciones.notifications.length}</span>
                     </button>
-                    <ul className={`${open ? "block" : "hidden"}  absolute h-fit translate-x-[-270px] translate-y-[53px] inset-0  w-80 bg-white rounded-sm drop-shadow-md`}
-                        // onClick={() => { console.log("dd") }}
-                    >
+                    <ul className={`${open ? "block" : "hidden"}  absolute h-fit translate-x-[-270px] translate-y-[53px] inset-0  w-80 bg-white rounded-sm drop-shadow-md`}>
                         <div className="max-h-[220px] overflow-y-auto">
                             {
                                 noticaciones.notifications.map((item, index) => {

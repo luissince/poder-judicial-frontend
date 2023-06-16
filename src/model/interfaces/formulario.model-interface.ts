@@ -1,3 +1,5 @@
+import Imagen from "./imagen.model.interface"
+
 export default interface Formulario {
     nombreSistema: string,
     versionSistema: string,
@@ -10,6 +12,5 @@ export default interface Formulario {
     fecha: string,
     descripcion: string,
     descartes: string,
-    base64Str: string,
-    extension: string,
+    imagenes: Imagen[]
 }

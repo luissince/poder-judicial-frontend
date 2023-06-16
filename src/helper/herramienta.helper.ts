@@ -8,12 +8,12 @@ export function formatTime(value: string) {
   return h + value.substr(hourEnd, 3) + ":" + value.substr(6, 2) + " " + ampm;
 }
 
-export async function imageBase64(ref: FileList): Promise<Base64> {
-  let files = ref;
-  if (files.length !== 0) {
-    let read = await readDataURL(files);
+export async function imageBase64(ref: File): Promise<Base64> {
+  let file = ref;
+  if (file) {
+    let read = await readDataURL(file);
     let base64String = read.replace(/^data:.+;base64,/, '');
-    let extension = getExtension(files[0].name);
+    let extension = getExtension(file.name);
     let { width, height } = await imageSizeData(read);
     const respuesta: Base64 ={
       base64String: base64String,
@@ -28,9 +28,8 @@ export async function imageBase64(ref: FileList): Promise<Base64> {
 }
 
 
-export function readDataURL(files: FileList): Promise<string> {
+export function readDataURL(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
-    let file = files[0];
     let blob = file.slice();
     var reader = new FileReader();
     reader.onload = () => {

@@ -17,7 +17,7 @@ import Trabajador from '../../model/interfaces/trabajador.model.interface';
 import PFrecuente from './centroayuda/pfrecuente/PFrecuente';
 import Consultas from './centroayuda/consultas/Consultas';
 import Responder from './centroayuda/responder/Responder';
-import toast, { Toaster } from 'react-hot-toast';
+import { Toaster } from 'react-hot-toast';
 
 const Inicio = (props: RouteComponentProps<{}>) => {
 
@@ -93,10 +93,6 @@ const Inicio = (props: RouteComponentProps<{}>) => {
 
     useEffect(() => {
         const load = async () => {
-            // await new Promise((resolve, reject) => {
-            //     setTimeout(resolve, 5000);
-            // });
-
             if (codigo.length === 8) {
                 const response = await TrabajadorRest<Trabajador>(codigo);
                 if (response instanceof Response) {
@@ -109,7 +105,7 @@ const Inicio = (props: RouteComponentProps<{}>) => {
                 }
             } else {
                 const response = await EstudianteRest<Estudiante>(codigo);
-                if (response instanceof Response) {                    
+                if (response instanceof Response) {
                     setInformacion(response.data as Estudiante);
                     setCargando(false);
                 }
@@ -141,7 +137,7 @@ const Inicio = (props: RouteComponentProps<{}>) => {
 
     useEffect(() => {
         const onEventFocused = () => {
-            // console.log("lasd")
+
         }
 
         window.addEventListener('focus', onEventFocused);
@@ -166,7 +162,6 @@ const Inicio = (props: RouteComponentProps<{}>) => {
         }
     }
 
-    // const { path, url } = props.match;
     const { path } = props.match;
 
     return (
@@ -187,7 +182,12 @@ const Inicio = (props: RouteComponentProps<{}>) => {
             {/*  */}
 
             {/* Aside */}
-            <Aside informacion={informacion} pathname={props.location.pathname} refAside={refAside} refOverlay={refOverlay} onEventOverlay={onEventOverlay} />
+            <Aside
+                informacion={informacion}
+                pathname={props.location.pathname}
+                refAside={refAside}
+                refOverlay={refOverlay}
+                onEventOverlay={onEventOverlay} />
             {/*  */}
 
             {/*  */}

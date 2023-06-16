@@ -1,32 +1,29 @@
-import { useRef, useState } from "react";
+import { Dispatch, SetStateAction, useRef, useState } from "react";
 
 type Props = {
-    imagenSelecionada:(file:File)=> void;
+    selectedFile: File,
+    setSelectedFile: Dispatch<SetStateAction<File>>,
+    refImagen: React.RefObject<HTMLInputElement>
 }
 
 const SeleccionarImagen = (props: Props) => {
 
-    const refImagen = useRef<HTMLInputElement>(null);
-    const [selectedFile, setSelectedFile] = useState<File>();
-
-
-    const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files.length !== 0) {
-            setSelectedFile(e.target.files[0]);
-            props.imagenSelecionada(e.target.files[0]);
+    const handleFileInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (event.target.files.length !== 0) {
+            props.setSelectedFile(event.target.files[0]);
         } else {
-            setSelectedFile(null);
-            refImagen.current.value = "";
+            props.setSelectedFile(null);
+            props.refImagen.current.value = "";
         }
     };
 
     const handleRemoveImage = () => {
-        refImagen.current.value = "";
-        setSelectedFile(null);
+        props.refImagen.current.value = "";
+        props.setSelectedFile(null);
     };
 
     const handleUploadButtonClick = () => {
-        refImagen.current.click();
+        props.refImagen.current.click();
     };
 
     return (
@@ -36,7 +33,7 @@ const SeleccionarImagen = (props: Props) => {
                     <div className="text-center">
                         <div className="flex flex-col items-center">
                             <input
-                                ref={refImagen}
+                                ref={props.refImagen}
                                 type="file"
                                 accept="image/*"
                                 className="hidden"
@@ -48,24 +45,24 @@ const SeleccionarImagen = (props: Props) => {
                             >
                                 Cargar una imagen
                             </button>
-                            {selectedFile && (
+                            {props.selectedFile && (
                                 <div className="flex flex-col items-center">
                                     <div className="relative flex-shrink-0 mb-2">
                                         <img
-                                            src={URL.createObjectURL(selectedFile)}
+                                            src={URL.createObjectURL(props.selectedFile)}
                                             alt="Imagen seleccionada"
                                             className="w-full h-auto sm:w-48 md:w-64 lg:w-80 rounded-md object-cover border-4 border-indigo-600"
                                         />
                                         <button
                                             className="absolute top-0 right-0 -mt-2 -mr-2 px-4 py-2 rounded-full bg-red-500 hover:bg-red-600 text-white"
                                             onClick={handleRemoveImage}
-                                        >
+>
                                             X
                                         </button>
                                     </div>
                                     <div className="text-center">
-                                        <p className="font-semibold text-gray-800">{selectedFile.name}</p>
-                                        <p className="text-sm text-gray-500">{selectedFile.type}</p>
+                                        <p className="font-semibold text-gray-800">{props.selectedFile.name}</p>
+                                        <p className="text-sm text-gray-500">{props.selectedFile.type}</p>
                                     </div>
                                 </div>
                             )}
