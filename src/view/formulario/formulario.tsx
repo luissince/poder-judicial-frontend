@@ -152,7 +152,7 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
           
             const imagen:Imagen = {
                 base64String: result.base64String,
-                extension: result.extension,
+                extension: result.extension.toLowerCase(),
                 descripcion : item.description
             }
             
