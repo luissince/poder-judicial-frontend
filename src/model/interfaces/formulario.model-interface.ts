@@ -11,7 +11,10 @@ export default interface Formulario {
     celularPersona: string
     fecha: string,
     descripcion: string,
-    descartes: string,
-    descarteAcepta: string,
+    preguntaUno: string,
+    preguntaDos: string,
+    preguntaTres: string,
+    preguntaCuatro: string,
+    preguntaCinco: string,
     imagenes: Imagen[]
 }

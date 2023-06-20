@@ -22,7 +22,6 @@ const MostrarPdf = (props: Props) =>{
         <CustomModal
                 isOpen={props.isOpen}
                 onOpen={async () => {
-                    console.log("asdasd")
                     const data: Formulario = {
                         nombreSistema: props.data.nombreSistema,
                         versionSistema: props.data.versionSistema,
@@ -34,12 +33,12 @@ const MostrarPdf = (props: Props) =>{
                         celularPersona: props.data.celularPersona,
                         fecha: props.data.fecha,
                         descripcion: props.data.descripcion,
-                        descartes: props.data.descartes,
-                        imagenes: props.data.imagenes
-                        // base64Str: props.data.base64Str,
-                        // extension: props.data.extension.toLowerCase()
-                        ,
-                        descarteAcepta: props.data.descarteAcepta
+                        imagenes: props.data.imagenes,
+                        preguntaUno: props.data.preguntaUno,
+                        preguntaDos: props.data.preguntaDos,
+                        preguntaTres: props.data.preguntaTres,
+                        preguntaCuatro: props.data.preguntaCuatro,
+                        preguntaCinco: props.data.preguntaCinco
                     };
              
                     const response = await ObtenerPdf<Blob>(data);
