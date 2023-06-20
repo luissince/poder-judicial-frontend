@@ -38,6 +38,8 @@ const MostrarPdf = (props: Props) =>{
                         imagenes: props.data.imagenes
                         // base64Str: props.data.base64Str,
                         // extension: props.data.extension.toLowerCase()
+                        ,
+                        descarteAcepta: props.data.descarteAcepta
                     };
              
                     const response = await ObtenerPdf<Blob>(data);

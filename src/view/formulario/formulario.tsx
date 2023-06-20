@@ -23,6 +23,7 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
     const [fecha, setFecha] = useState("");
     const [descripcion, setDescripcion] = useState("");
     const [descartes, setDescartes] = useState("");
+    const [descarteAcepta, setDescarteAcepta] = useState('si');
     const [imagenes, setImagenes] = useState<Imagen[]>([]);
 
     const refNombreSistema = useRef<HTMLSelectElement>(null);
@@ -55,6 +56,7 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
         fecha: fecha,
         descripcion: descripcion,
         descartes: descartes,
+        descarteAcepta: descarteAcepta,
         imagenes: imagenes
     }
 
@@ -145,17 +147,17 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
         // setBase64Str(result.base64String);
         // setExtension(result.extension);
 
-        let listaImagenes:Imagen[] = [];
+        let listaImagenes: Imagen[] = [];
         for (const item of selectedFiles) {
-           
+
             const result = await imageBase64(item.file) as Base64;
-          
-            const imagen:Imagen = {
+
+            const imagen: Imagen = {
                 base64String: result.base64String,
                 extension: result.extension.toLowerCase(),
-                descripcion : item.description
+                descripcion: item.description
             }
-            
+
             listaImagenes.push(imagen);
         }
         setImagenes(listaImagenes);
@@ -482,6 +484,40 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
                             </select>
                         </div>
                     </div>
+                </div>
+
+                <div className="mt-2">
+                    <fieldset>
+                        <legend className="text-sm leading-6 text-gray-900"></legend>
+                        <div className="mt-2 space-y-2">
+                            <div className="flex items-center gap-x-3">
+                                <input
+                                    id="radio-si"
+                                    name="descartes-radio"
+                                    type="radio" className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                                    value={"si"}
+                                    checked={descarteAcepta === "si"}
+                                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                        console.log(event.target.value)
+                                        setDescarteAcepta(event.target.value)
+                                    }} />
+                                <label htmlFor="radio-si" className="block text-xs font-medium leading-6 text-gray-900">Si</label>
+                            </div>
+                            <div className="flex items-center gap-x-3">
+                                <input
+                                    id="radio-no"
+                                    name="descartes-radio"
+                                    type="radio"
+                                    className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                                    value={"no"}
+                                    checked={descarteAcepta === "no"}
+                                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                        setDescarteAcepta(event.target.value)
+                                    }} />
+                                <label htmlFor="radio-no" className="block text-xs font-medium leading-6 text-gray-900">No</label>
+                            </div>
+                        </div>
+                    </fieldset>
                 </div>
 
                 <br />

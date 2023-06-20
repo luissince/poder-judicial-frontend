@@ -12,5 +12,6 @@ export default interface Formulario {
     fecha: string,
     descripcion: string,
     descartes: string,
+    descarteAcepta: string,
     imagenes: Imagen[]
 }
