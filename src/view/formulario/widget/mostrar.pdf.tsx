@@ -23,7 +23,8 @@ const MostrarPdf = (props: Props) =>{
                 isOpen={props.isOpen}
                 onOpen={async () => {
                     const data: Formulario = {
-                        nombreSistema: props.data.nombreSistema,
+                        nombreSIJ: props.data.nombreSIJ,
+                        nombreWEB: props.data.nombreWEB,
                         versionSistema: props.data.versionSistema,
                         usuarioNombre: props.data.usuarioNombre,
                         celularAxeso: props.data.celularAxeso,

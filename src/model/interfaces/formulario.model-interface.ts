@@ -1,7 +1,8 @@
 import Imagen from "./imagen.model.interface"
 
 export default interface Formulario {
-    nombreSistema: string,
+    nombreSIJ: string,
+    nombreWEB: string,
     versionSistema: string,
     usuarioNombre: string,
     celularAxeso: string,

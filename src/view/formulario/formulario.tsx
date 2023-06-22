@@ -2,7 +2,7 @@ import { RouteComponentProps } from "react-router-dom";
 import { images } from "../../helper/index.helper";
 import { useState, useRef, ChangeEvent } from "react";
 import Formulario from "../../model/interfaces/formulario.model-interface";
-import { imageBase64 } from "../../helper/herramienta.helper";
+import { currentDate, imageBase64, keyNumberPhone, keyNumberVersion } from "../../helper/herramienta.helper";
 import Base64 from "../../model/interfaces/base64";
 import toast, { Toaster } from "react-hot-toast";
 import SeleccionarImagen from "./widget/seleccionar.imagen";
@@ -10,9 +10,11 @@ import MostrarPdf from "./widget/mostrar.pdf";
 import TituloPdf from "./widget/titulo.pdf";
 import React from "react";
 import Imagen from "../../model/interfaces/imagen.model.interface";
+import { Alerta } from "./widget/alerta";
 
 const FormularioView = (props: RouteComponentProps<{}>) => {
-    const [nombreSistema, setNombreSistema] = useState("");
+    const [nombreSIJ, setNombreSIJ] = useState("");
+    const [nombreWeb, setNombreWeb] = useState("");
     const [versionSistema, setVersionSistema] = useState("");
     const [usuarioNombre, setUsuarioNombre] = useState("");
     const [celularAxeso, setCelularAnexo] = useState("");
@@ -20,7 +22,7 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
     const [cargo, setCargo] = useState("");
     const [personaReporte, setPersonaReporte] = useState("");
     const [celularPersona, setCelularPersona] = useState("");
-    const [fecha, setFecha] = useState("");
+    const [fecha, setFecha] = useState(currentDate());
     const [descripcion, setDescripcion] = useState("");
     const [preguntaUno, setPreguntaUno] = useState('si');
     const [preguntaDos, setPreguntaDos] = useState('si');
@@ -29,7 +31,8 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
     const [preguntaCinco, setPreguntaCinco] = useState('si');
     const [imagenes, setImagenes] = useState<Imagen[]>([]);
 
-    const refNombreSistema = useRef<HTMLSelectElement>(null);
+    const refNombreSIJ = useRef<HTMLSelectElement>(null);
+    const refNombreWEB = useRef<HTMLSelectElement>(null);
     const refVersionSistema = useRef<HTMLInputElement>(null);
     const refUsuarioNombre = useRef<HTMLInputElement>(null);
     const refCelularAxeso = useRef<HTMLInputElement>(null);
@@ -39,7 +42,6 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
     const refCelularPersona = useRef<HTMLInputElement>(null);
     const refFecha = useRef<HTMLInputElement>(null);
     const refDescripcion = useRef<HTMLTextAreaElement>(null);
-    const refDescartes = useRef<HTMLSelectElement>(null);
 
     const [selectedFiles, setSelectedFiles] = useState<Array<{ ref: React.RefObject<HTMLInputElement>, file: File, description: string }>>([]);
 
@@ -48,7 +50,8 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
     const [zoomLevel, setZoomLevel] = useState(100);
 
     const data: Formulario = {
-        nombreSistema: nombreSistema,
+        nombreSIJ: nombreSIJ == "" ? "" : "SIJ: " + refNombreSIJ.current.selectedOptions[0]?.innerText,
+        nombreWEB: nombreWeb == "" ? "" : "WEB: " + refNombreWEB.current.selectedOptions[0]?.innerText,
         versionSistema: versionSistema,
         usuarioNombre: usuarioNombre,
         celularAxeso: celularAxeso,
@@ -67,91 +70,87 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
     }
 
     const handleButtonClick = async () => {
-        if (refNombreSistema.current && refNombreSistema.current.value.trim() === "") {
-            refNombreSistema.current.focus();
+        if (refNombreSIJ.current && refNombreSIJ.current.value.trim() === "" && refNombreWEB.current && refNombreWEB.current.value.trim() === "") {
+            refNombreSIJ.current.focus();
+            Alerta("Seleccione si es de tipo SIJ o WEB.");
+            return;
+        }
+
+        if (refNombreSIJ.current && refNombreSIJ.current.value.trim() !== "" && refNombreWEB.current && refNombreWEB.current.value.trim() !== "") {
+            refNombreSIJ.current.focus();
+            Alerta("Solo puedes seleccionar un tipo SIJ o WEB.");
+            return;
+        }
+
+        if (refNombreSIJ.current && refNombreSIJ.current.value.trim() === "" && refNombreWEB.current && refNombreWEB.current.value.trim() === "") {
+            refNombreSIJ.current.focus();
+            Alerta("Seleccione el SIJ.");
+            return;
+        }
+
+        if (refNombreWEB.current && refNombreWEB.current.value.trim() === "" && refNombreSIJ.current && refNombreSIJ.current.value.trim() === "") {
+            refNombreWEB.current.focus();
+            Alerta("Seleccione el WEB.");
             return;
         }
 
         if (refVersionSistema.current && refVersionSistema.current.value.trim() === "") {
             refVersionSistema.current.focus();
+            Alerta("Ingrese la versión del formulario.");
             return;
         }
 
         if (refUsuarioNombre.current && refUsuarioNombre.current.value.trim() === "") {
             refUsuarioNombre.current.focus();
+            Alerta("Ingrese los datos del usuario.");
             return;
         }
 
         if (refCelularAxeso.current && refCelularAxeso.current.value.trim() === "") {
             refCelularAxeso.current.focus();
+            Alerta("Ingrese el celular o anexo.");
             return;
         }
 
         if (refSede.current && refSede.current.value.trim() === "") {
             refSede.current.focus();
+            Alerta("Ingrese la sede.");
             return;
         }
 
         if (refCargo.current && refCargo.current.value.trim() === "") {
             refCargo.current.focus();
+            Alerta("Ingrese el cargo.");
             return;
         }
 
         if (refPersonaReporte.current && refPersonaReporte.current.value.trim() === "") {
             refPersonaReporte.current.focus();
+            Alerta("Ingrese los datos del que reporta.");
             return;
         }
 
         if (refCelularPersona.current && refCelularPersona.current.value.trim() === "") {
             refCelularPersona.current.focus();
+            Alerta("Ingrese el n° de celular de la persona que reporte.");
             return;
         }
 
         if (refFecha.current && refFecha.current.value.trim() === "") {
             refFecha.current.focus();
+            Alerta("Ingrese la fecha.");
             return;
         }
 
         if (refDescripcion.current && refDescripcion.current.value.trim() === "") {
             refDescripcion.current.focus();
+            Alerta("Ingrese la descripción del caso.");
             return;
         }
 
-        if (refDescartes.current && refDescartes.current.value.trim() === "") {
-            refDescartes.current.focus();
-            return;
+        if (selectedFiles.length == 0) {
+            Alerta("Agrega las imagenes correspondientes.");
         }
-
-        // if (selectedFile == null) {
-        //     toast((t) => (
-        //         <div className="flex gap-x-4 items-center">
-
-        //             <div className="flex items-center">
-        //                 <div className="ml-3 flex-1">
-
-        //                     <p className="text-sm text-black">
-        //                         Seleccione una imagen
-        //                     </p>
-        //                 </div>
-        //             </div>
-
-        //             <div className="flex border-gray-200">
-        //                 <button
-        //                     className="px-2 py-1 rounded-full bg-red-500 hover:bg-red-600 text-white"
-        //                     onClick={() => toast.dismiss(t.id)}>
-        //                     <i className="bi bi-x-lg"></i>
-        //                 </button>
-        //             </div>
-        //         </div>
-        //     ), {
-        //         position: "top-right"
-        //     })
-        // return;
-        // }
-
-        // const result = await imageBase64(refImagen.current.files) as Base64;
-        // setBase64Str(result.base64String);
-        // setExtension(result.extension);
 
         let listaImagenes: Imagen[] = [];
         for (const item of selectedFiles) {
@@ -257,23 +256,70 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
                     INFORMACIÓN DEL SISTEMA:{" "}
                 </p>
 
-                <div className="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
+                <div className="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-3">
                     <div>
                         <label className="block text-sm font-semibold leading-6 text-gray-900">
-                            Nombre
+                            SIJ
                         </label>
                         <div className="mt-0">
                             <select
-                                ref={refNombreSistema}
-                                value={nombreSistema}
+                                ref={refNombreSIJ}
+                                value={nombreSIJ}
                                 onChange={(event: ChangeEvent<HTMLSelectElement>) => {
-                                    setNombreSistema(event.currentTarget.value);
+                                    setNombreSIJ(event.currentTarget.value);
                                 }}
                                 className="block w-full rounded-md border-0 px-3.5 py-0.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                             >
                                 <option value="">-- Seleccione --</option>
-                                <option value="SIJ">SIJ</option>
-                                <option value="WEB">WEB</option>
+                                <option value="SIJ001">Expedientes</option>
+                                <option value="SIJ002">SINAREJ</option>
+                                <option value="SIJ003">CONDENAS</option>
+                                <option value="SIJ004">SINOJ</option>
+                                <option value="SIJ005">REQUISITORIAS</option>
+                                <option value="SIJ006">RENIPROS</option>
+                                <option value="SIJ007">ARCHIVO</option>
+                                <option value="SIJ008">PERITOS JUDICIALES</option>
+                                <option value="SIJ009">CUERPO DEL DELITO</option>
+                                <option value="SIJ0010">SERNOT</option>
+                                <option value="SIJ0011">REDAM</option>
+                                <option value="SIJ0013">RENAVINA</option>
+                                <option value="SIJ0016">SIGEM</option>
+                                <option value="SIJ0018">PERITOS NLPT</option>
+                                <option value="SIJ000">OTROS</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-semibold leading-6 text-gray-900">
+                            WEB
+                        </label>
+                        <div className="mt-0">
+                            <select
+                                ref={refNombreWEB}
+                                value={nombreWeb}
+                                onChange={(event: ChangeEvent<HTMLSelectElement>) => {
+                                    setNombreWeb(event.currentTarget.value);
+                                }}
+                                className="block w-full rounded-md border-0 px-3.5 py-0.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                            >
+                                <option value="">-- Seleccione --</option>
+                                <option value="WEB001">CEJ</option>
+                                <option value="WEB002">JUEZ TE ESCUCHA</option>
+                                <option value="WEB003">MPE</option>
+                                <option value="WEB004">MSIAP</option>
+                                <option value="WEB005">PSEP</option>
+                                <option value="WEB006">RENIPROS</option>
+                                <option value="WEB007">REMAJU</option>
+                                <option value="WEB008">REQUISITORIAS WEB</option>
+                                <option value="WEB009">SADEJ</option>
+                                <option value="WEB0010">SERNOT</option>
+                                <option value="WEB0011">SIARA</option>
+                                <option value="WEB0013">SICAPE</option>
+                                <option value="WEB0016">SIGRA</option>
+                                <option value="WEB0018">SISMOV</option>
+                                <option value="WEB0018">VACACIOENS</option>
+                                <option value="WEB000">OTROS</option>
                             </select>
                         </div>
                     </div>
@@ -290,7 +336,7 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
                                 onChange={(event: ChangeEvent<HTMLInputElement>) => {
                                     setVersionSistema(event.target.value);
                                 }}
-                                autoComplete="family-name"
+                                onKeyDown={keyNumberVersion}
                                 className="block w-full rounded-md border-0 px-3.5 py-0.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                             />
                         </div>
@@ -333,6 +379,7 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
                                 onChange={(event: ChangeEvent<HTMLInputElement>) => {
                                     setCelularAnexo(event.target.value);
                                 }}
+                                onKeyDown={keyNumberPhone}
                                 autoComplete="family-name"
                                 className="block w-full rounded-md border-0 px-3.5 py-0.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                             />
@@ -410,6 +457,7 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
                                 onChange={(event: ChangeEvent<HTMLInputElement>) => {
                                     setCelularPersona(event.target.value);
                                 }}
+                                onKeyDown={keyNumberPhone}
                                 autoComplete="family-name"
                                 className="block w-full rounded-md border-0 px-3.5 py-0.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                             />
@@ -599,7 +647,7 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
                 <div className="mt-2">
                     <fieldset>
                         <legend className="text-sm leading-6 text-gray-900">5. ¿Se está utilizando la última versión de la aplicación
-                                    desplegada en la corte?</legend>
+                            desplegada en la corte?</legend>
                         <div className="mt-2 space-y-2">
                             <div className="flex items-center gap-x-3">
                                 <input
