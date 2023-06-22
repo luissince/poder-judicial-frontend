@@ -150,6 +150,7 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
 
         if (selectedFiles.length == 0) {
             Alerta("Agrega las imagenes correspondientes.");
+            return;
         }
 
         let listaImagenes: Imagen[] = [];
