@@ -49,10 +49,10 @@ Siga los pasos para iniciar el desarrollo:
         // Configuración global del email
         git config --global user.email johndoe@example.com
 
-        // crea una carpera
+        // crea una carpeta
         mkdir poder-judicial-frontend
 
-        // moverse a la carpera
+        // moverse a la carpeta
         cd poder-judicial-frontend
         
         // comando que inicia git
