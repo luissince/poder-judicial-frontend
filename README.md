@@ -3,7 +3,7 @@
 # FORMULARIO PARA EL PODER JUDICIAL
 
 <!-- ![IMAGES DE GO LANG](images/ladder.svg) -->
-<img src="src/assets/images/logo_upla.svg" alt="Imagen go" width="200" />
+<img src="src/assets/images/logo-poder-judicial.png" alt="Imagen go" width="200" />
 
 <font size="5" face="Qwitcher Grypen">
 Aplicación para generar la incidencias con caputas de pantalla.
