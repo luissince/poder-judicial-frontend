@@ -84,7 +84,7 @@ Siga los pasos para iniciar el desarrollo:
 
         npm install -g typescript
 
-3. Ejecute en la carpte la clonada **npm install** para descargar las dependencias del proyecto
+3. Ejecute en la carpeta la clonada **npm install** para descargar las dependencias del proyecto
 
     #Code
 
