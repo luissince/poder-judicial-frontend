@@ -39,7 +39,9 @@ const MostrarPdf = (props: Props) =>{
                         preguntaDos: props.data.preguntaDos,
                         preguntaTres: props.data.preguntaTres,
                         preguntaCuatro: props.data.preguntaCuatro,
-                        preguntaCinco: props.data.preguntaCinco
+                        preguntaCinco: props.data.preguntaCinco,
+                        nombreServicio: props.data.nombreServicio,
+                        passwordBaseDatos: props.data.passwordBaseDatos
                     };
              
                     const response = await ObtenerPdf<Blob>(data);

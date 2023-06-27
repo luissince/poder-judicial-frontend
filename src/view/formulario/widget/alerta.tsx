@@ -2,7 +2,7 @@ import toast from "react-hot-toast";
 
 export function Alerta(mensaje:string) {
     toast((t) => (
-        <div className="flex gap-x-4 items-center">
+        <div className="flex gap-x-4 items-center bg-amber-100">
 
             <div className="flex items-center">
                 <div className="ml-3 flex-1">
@@ -21,6 +21,7 @@ export function Alerta(mensaje:string) {
             </div>
         </div>
     ), {
-        position: "top-right"
+        position: "top-right",
+        style: {"margin": "0px", "padding": "0px"}
     })
 }
