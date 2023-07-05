@@ -1,5 +1,6 @@
 export default interface CorteCsj {
     id: string,
+    nombre_corte: string,
     nombre_servicio: string,
     password_db: string
     nombre_db: string
