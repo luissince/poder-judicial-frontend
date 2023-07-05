@@ -1,6 +1,6 @@
 import { RouteComponentProps } from "react-router-dom";
-import { images } from "../../helper/index.helper";
-import { useState, useRef, ChangeEvent, useEffect } from "react";
+import { images, lista } from "../../helper/index.helper";
+import { useState, useRef, ChangeEvent, useEffect, useMemo } from "react";
 import Formulario from "../../model/interfaces/formulario.model-interface";
 import { currentDate, imageBase64, keyNumberPhone, keyNumberVersion } from "../../helper/herramienta.helper";
 import Base64 from "../../model/interfaces/base64";
@@ -20,8 +20,8 @@ import { Types } from "../../model/enum/types.model";
 const FormularioView = (props: RouteComponentProps<{}>) => {
 
     const [cargando, setCargando] = useState<boolean>(true);
-    const [nombreSIJ, setNombreSIJ] = useState("");
-    const [nombreWeb, setNombreWeb] = useState("");
+    const [tipoSistema, setTipoSistema] = useState('');
+    const [nombreSistema, setNombreSistema] = useState("");
     const [versionSistema, setVersionSistema] = useState("");
     const [usuarioNombre, setUsuarioNombre] = useState("");
     const [celularAxeso, setCelularAnexo] = useState("");
@@ -40,8 +40,8 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
     const [corteCsj, setCorteCsj] = useState('');
     const [listaCorteCsj, setListaCorteCsj] = useState<CorteCsj[]>([]);
 
-    const refNombreSIJ = useRef<HTMLSelectElement>(null);
-    const refNombreWEB = useRef<HTMLSelectElement>(null);
+    const refTipoSistema = useRef<HTMLInputElement>(null);
+    const refNombreSistema = useRef<HTMLSelectElement>(null);
     const refVersionSistema = useRef<HTMLInputElement>(null);
     const refUsuarioNombre = useRef<HTMLInputElement>(null);
     const refCelularAxeso = useRef<HTMLInputElement>(null);
@@ -81,8 +81,7 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
     }, []);
 
     const data: Formulario = {
-        nombreSIJ: nombreSIJ == "" ? "" : "SIJ: " + refNombreSIJ.current.selectedOptions[0]?.innerText,
-        nombreWEB: nombreWeb == "" ? "" : "WEB: " + refNombreWEB.current.selectedOptions[0]?.innerText,
+        nombreSistema: nombreSistema != "" && refNombreSistema.current.selectedOptions[0]?.innerText,
         versionSistema: versionSistema,
         usuarioNombre: usuarioNombre,
         celularAxeso: celularAxeso,
@@ -102,27 +101,15 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
     }
 
     const handleButtonClick = async () => {
-        if (refNombreSIJ.current && refNombreSIJ.current.value.trim() === "" && refNombreWEB.current && refNombreWEB.current.value.trim() === "") {
-            refNombreSIJ.current.focus();
-            Alerta("Seleccione si es de tipo SIJ o WEB.");
+        if (tipoSistema === "") {
+            refTipoSistema.current.focus();
+            Alerta("Seleccione el tipo de sistema.");
             return;
         }
 
-        if (refNombreSIJ.current && refNombreSIJ.current.value.trim() !== "" && refNombreWEB.current && refNombreWEB.current.value.trim() !== "") {
-            refNombreSIJ.current.focus();
-            Alerta("Solo puedes seleccionar un tipo SIJ o WEB.");
-            return;
-        }
-
-        if (refNombreSIJ.current && refNombreSIJ.current.value.trim() === "" && refNombreWEB.current && refNombreWEB.current.value.trim() === "") {
-            refNombreSIJ.current.focus();
-            Alerta("Seleccione el SIJ.");
-            return;
-        }
-
-        if (refNombreWEB.current && refNombreWEB.current.value.trim() === "" && refNombreSIJ.current && refNombreSIJ.current.value.trim() === "") {
-            refNombreWEB.current.focus();
-            Alerta("Seleccione el WEB.");
+        if (refNombreSistema.current && refNombreSistema.current.value.trim() === "") {
+            refNombreSistema.current.focus();
+            Alerta("Seleccione el nombre del sistema - " + tipoSistema.toUpperCase() + " .");
             return;
         }
 
@@ -328,67 +315,68 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
                 <div className="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-3">
                     <div>
                         <label className="block text-sm font-semibold leading-6 text-gray-900">
-                            SIJ
+                            Tipo de Sistema
                         </label>
-                        <div className="mt-0">
-                            <select
-                                ref={refNombreSIJ}
-                                value={nombreSIJ}
-                                onChange={(event: ChangeEvent<HTMLSelectElement>) => {
-                                    setNombreSIJ(event.currentTarget.value);
-                                }}
-                                className="block w-full rounded-md border-0 px-3.5 py-0.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-red-900 sm:text-sm sm:leading-6"
-                            >
-                                <option value="">-- Seleccione --</option>
-                                <option value="SIJ001">Expedientes</option>
-                                <option value="SIJ002">SINAREJ</option>
-                                <option value="SIJ003">CONDENAS</option>
-                                <option value="SIJ004">SINOJ</option>
-                                <option value="SIJ005">REQUISITORIAS</option>
-                                <option value="SIJ006">RENIPROS</option>
-                                <option value="SIJ007">ARCHIVO</option>
-                                <option value="SIJ008">PERITOS JUDICIALES</option>
-                                <option value="SIJ009">CUERPO DEL DELITO</option>
-                                <option value="SIJ0010">SERNOT</option>
-                                <option value="SIJ0011">REDAM</option>
-                                <option value="SIJ0013">RENAVINA</option>
-                                <option value="SIJ0016">SIGEM</option>
-                                <option value="SIJ0018">PERITOS NLPT</option>
-                                <option value="SIJ000">OTROS</option>
-                            </select>
-                        </div>
+                        <fieldset>
+                            <div className="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
+                                <div className="flex items-center gap-x-3">
+                                    <input
+                                        id="radio-sij"
+                                        name="tipo-sij-web"
+                                        type="radio" 
+                                        ref={refTipoSistema}
+                                        className="h-4 w-4 border-gray-300 text-red-900 focus:ring-red-900"
+                                        value={"sij"}
+                                        checked={tipoSistema === "sij"}
+                                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                            setTipoSistema(event.target.value)
+                                        }} />
+                                    <label htmlFor="radio-sij" className="block text-xs font-medium leading-6 text-gray-900">SIJ</label>
+                                </div>
+                                <div className="flex items-center gap-x-3">
+                                    <input
+                                        id="radio-web"
+                                        name="tipo-sij-web"
+                                        type="radio"
+                                        className="h-4 w-4 border-gray-300 text-red-900 focus:ring-red-900"
+                                        value={"web"}
+                                        checked={tipoSistema === "web"}
+                                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                            setTipoSistema(event.target.value)
+                                        }} />
+                                    <label htmlFor="radio-web" className="block text-xs font-medium leading-6 text-gray-900">WEB</label>
+                                </div>
+                            </div>
+                        </fieldset>
                     </div>
 
                     <div>
                         <label className="block text-sm font-semibold leading-6 text-gray-900">
-                            WEB
+                            Por Seleccionar
                         </label>
                         <div className="mt-0">
                             <select
-                                ref={refNombreWEB}
-                                value={nombreWeb}
+                                ref={refNombreSistema}
+                                value={nombreSistema}
                                 onChange={(event: ChangeEvent<HTMLSelectElement>) => {
-                                    setNombreWeb(event.currentTarget.value);
+                                    setNombreSistema(event.currentTarget.value);
                                 }}
                                 className="block w-full rounded-md border-0 px-3.5 py-0.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-red-900 sm:text-sm sm:leading-6"
                             >
-                                <option value="">-- Seleccione --</option>
-                                <option value="WEB001">CEJ</option>
-                                <option value="WEB002">JUEZ TE ESCUCHA</option>
-                                <option value="WEB003">MPE</option>
-                                <option value="WEB004">MSIAP</option>
-                                <option value="WEB005">PSEP</option>
-                                <option value="WEB006">RENIPROS</option>
-                                <option value="WEB007">REMAJU</option>
-                                <option value="WEB008">REQUISITORIAS WEB</option>
-                                <option value="WEB009">SADEJ</option>
-                                <option value="WEB0010">SERNOT</option>
-                                <option value="WEB0011">SIARA</option>
-                                <option value="WEB0013">SICAPE</option>
-                                <option value="WEB0016">SIGRA</option>
-                                <option value="WEB0018">SISMOV</option>
-                                <option value="WEB0018">VACACIONES</option>
-                                <option value="WEB000">OTROS</option>
+                                {
+                                    tipoSistema == "" ?
+                                        <option value="">- -</option>
+                                        :
+
+                                        tipoSistema == "sij" ?
+                                            lista.ListaSij.map((item, index) => (
+                                                <option key={index} value={item.id}>{item.nombre}</option>
+                                            ))
+                                            :
+                                            lista.ListaWeb.map((item, index) => (
+                                                <option key={index} value={item.id}>{item.nombre}</option>
+                                            ))
+                                }
                             </select>
                         </div>
                     </div>
@@ -406,6 +394,7 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
                                     setVersionSistema(event.target.value);
                                 }}
                                 onKeyDown={keyNumberVersion}
+                                placeholder="0.0.0"
                                 className="block w-full rounded-md border-0 px-3.5 py-0.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-red-900 sm:text-sm sm:leading-6"
                             />
                         </div>

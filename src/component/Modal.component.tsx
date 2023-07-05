@@ -6,14 +6,14 @@ interface ModalProps {
   isOpen: boolean;
   onOpen: () => void;
   onHidden: () => void;
-  onClose: () => void;
+  onClose?: () => void;
   ref?: React.RefObject<ReactModal>;
-  children: React.ReactNode; 
+  children: React.ReactNode;
 }
 
 Modal.setAppElement('#root');
 
-const CustomModal: React.FC<ModalProps> = ({ isOpen, onOpen,onHidden,onClose, children, ref }) => {
+const CustomModal: React.FC<ModalProps> = ({ isOpen, onOpen, onHidden, onClose, children, ref }) => {
   const customModalStyles = {
     content: {
       top: '50%',
@@ -35,7 +35,7 @@ const CustomModal: React.FC<ModalProps> = ({ isOpen, onOpen,onHidden,onClose, ch
       isOpen={isOpen}
       onAfterOpen={onOpen}
       onAfterClose={onHidden}
-      shouldCloseOnOverlayClick ={false}
+      shouldCloseOnOverlayClick={false}
       onRequestClose={onClose}
       style={customModalStyles}
       className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-none shadow-lg p-0 flex"
