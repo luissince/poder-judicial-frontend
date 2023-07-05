@@ -30,8 +30,7 @@ const MostrarPdf = (props: Props) => {
                 setCargando(true)
                 setMensaje("Generando PDF...")
                 const data: Formulario = {
-                    nombreSIJ: props.data.nombreSIJ,
-                    nombreWEB: props.data.nombreWEB,
+                    nombreSistema: props.data.nombreSistema,
                     versionSistema: props.data.versionSistema,
                     usuarioNombre: props.data.usuarioNombre,
                     celularAxeso: props.data.celularAxeso,
@@ -68,9 +67,6 @@ const MostrarPdf = (props: Props) => {
             }}
             onHidden={() => {
                 setCargando(false)
-            }}
-            onClose={() => {
-
             }}
         >
             {/* <button
