@@ -18,6 +18,5 @@ export default interface Formulario {
     preguntaCuatro: string,
     preguntaCinco: string,
     imagenes: Imagen[],
-    nombreServicio: string,
-    passwordBaseDatos: string,
+    idCorteCsj: string
 }

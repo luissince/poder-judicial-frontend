@@ -14,21 +14,21 @@ const instance = axios.create({
     }
 });
 
-instance.interceptors.request.use((config) => {
-    const storage = window.localStorage as Storage;
-    const token = storage.getItem('token');
-    if (token !== null) {
-        config.headers.Authorization = 'Bearer ' + JSON.parse(token);
-    }
-    return config;
-});
+// instance.interceptors.request.use((config) => {
+//     const storage = window.localStorage as Storage;
+//     const token = storage.getItem('token');
+//     if (token !== null) {
+//         config.headers.Authorization = 'Bearer ' + JSON.parse(token);
+//     }
+//     return config;
+// });
 
-export async function ObtenerPdf<Blob>(data: Formulario):Promise<Response<Blob> | RestError> {
-    return await Resolve.create<Blob>(
-        instance.post("/pdf", data, {
-            responseType: 'arraybuffer',
-        })
-    );
+export async function ObtenerPdf<Blob>(data: Formulario): Promise<Response<Blob> | RestError> {
+    return await Resolve.create<Blob>(instance.post("/pdf", data, { responseType: 'arraybuffer', }));
+}
+
+export async function ListaCorteCsj<CorteCsj>(abortController: AbortController | null): Promise<Response<CorteCsj> | RestError> {
+    return await Resolve.create<CorteCsj>(instance.get("/cortecsj", { signal: abortController?.signal }));
 }
 
 export async function LoginRest<Login>(params: object, signal = null): Promise<Response<Login> | RestError> {

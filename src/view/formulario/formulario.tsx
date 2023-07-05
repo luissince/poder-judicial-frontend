@@ -4,15 +4,22 @@ import { useState, useRef, ChangeEvent, useEffect } from "react";
 import Formulario from "../../model/interfaces/formulario.model-interface";
 import { currentDate, imageBase64, keyNumberPhone, keyNumberVersion } from "../../helper/herramienta.helper";
 import Base64 from "../../model/interfaces/base64";
-import toast, { Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 import SeleccionarImagen from "./widget/seleccionar.imagen";
 import MostrarPdf from "./widget/mostrar.pdf";
 import TituloPdf from "./widget/titulo.pdf";
 import React from "react";
 import Imagen from "../../model/interfaces/imagen.model.interface";
 import { Alerta } from "./widget/alerta";
+import { ListaCorteCsj } from "../../network/rest/index.network";
+import CorteCsj from "../../model/interfaces/cortecsj";
+import Response from "../../model/class/response.model.class";
+import RestError from "../../model/class/resterror.model.class";
+import { Types } from "../../model/enum/types.model";
 
 const FormularioView = (props: RouteComponentProps<{}>) => {
+
+    const [cargando, setCargando] = useState<boolean>(true);
     const [nombreSIJ, setNombreSIJ] = useState("");
     const [nombreWeb, setNombreWeb] = useState("");
     const [versionSistema, setVersionSistema] = useState("");
@@ -30,8 +37,8 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
     const [preguntaCuatro, setPreguntaCuatro] = useState('si');
     const [preguntaCinco, setPreguntaCinco] = useState('si');
     const [imagenes, setImagenes] = useState<Imagen[]>([]);
-    const [nombreServicio, setNombreServicio] = useState('');
-    const [passwordBaseDatos, setPasswordBaseDatos] = useState('');
+    const [corteCsj, setCorteCsj] = useState('');
+    const [listaCorteCsj, setListaCorteCsj] = useState<CorteCsj[]>([]);
 
     const refNombreSIJ = useRef<HTMLSelectElement>(null);
     const refNombreWEB = useRef<HTMLSelectElement>(null);
@@ -44,8 +51,7 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
     const refCelularPersona = useRef<HTMLInputElement>(null);
     const refFecha = useRef<HTMLInputElement>(null);
     const refDescripcion = useRef<HTMLTextAreaElement>(null);
-    const refNombreServicio = useRef<HTMLInputElement>(null);
-    const refPasswordBaseDatos = useRef<HTMLInputElement>(null);
+    const refCorteCsj = useRef<HTMLSelectElement>(null);
 
     const [selectedFiles, setSelectedFiles] = useState<Array<{ ref: React.RefObject<HTMLInputElement>, file: File, description: string }>>([]);
 
@@ -53,9 +59,26 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
     const iframeRef = useRef<HTMLIFrameElement>(null);
     const [zoomLevel, setZoomLevel] = useState(100);
 
-    useEffect(()=>{
+    const abortControllerCorteCsj = useRef(new AbortController());
+
+    useEffect(() => {
         handleAddElement();
-    },[]);
+
+        const CargarCortCsj = async () => {
+
+            const response = await ListaCorteCsj<CorteCsj[]>(abortControllerCorteCsj.current);
+            if (response instanceof Response) {
+                setListaCorteCsj(response.data);
+                setCargando(false);
+            }
+
+            if (response instanceof RestError) {
+                if (response.getType() === Types.CANCELED) return;
+            }
+        }
+
+        CargarCortCsj();
+    }, []);
 
     const data: Formulario = {
         nombreSIJ: nombreSIJ == "" ? "" : "SIJ: " + refNombreSIJ.current.selectedOptions[0]?.innerText,
@@ -75,8 +98,7 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
         preguntaCuatro: preguntaCuatro,
         preguntaCinco: preguntaCinco,
         imagenes: imagenes,
-        nombreServicio: nombreServicio,
-        passwordBaseDatos: passwordBaseDatos
+        idCorteCsj: corteCsj,
     }
 
     const handleButtonClick = async () => {
@@ -152,6 +174,13 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
             return;
         }
 
+        if (refCorteCsj.current && refCorteCsj.current.value.trim() === "") {
+            refCorteCsj.current.focus();
+            Alerta("Seleccione Corte CSJ.");
+            return;
+        }
+
+
         if (refDescripcion.current && refDescripcion.current.value.trim() === "") {
             refDescripcion.current.focus();
             Alerta("Ingrese la descripción del caso.");
@@ -162,6 +191,18 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
             Alerta("Agrega las imagenes correspondientes.");
             return;
         }
+
+        let countImage = 0;
+        for (const item of selectedFiles) {
+            if (item.file == null) {
+                countImage++;
+            }
+        }
+        if (countImage > 0) {
+            Alerta("Hay imgenes sin cargar.");
+            return;
+        }
+
 
         let listaImagenes: Imagen[] = [];
         for (const item of selectedFiles) {
@@ -191,7 +232,7 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
         }
     };
 
-    const handleUploadButtonClick = (index: number) => {
+    const handleUploadFileInput = (index: number) => {
         selectedFiles[index].ref.current?.click();
     };
 
@@ -215,6 +256,14 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
         setSelectedFiles(prevSelectedFiles => {
             const updatedFiles = [...prevSelectedFiles];
             updatedFiles.splice(index, 1);
+            return updatedFiles;
+        });
+    };
+
+    const handleRemoveImage = (index: number) => {
+        setSelectedFiles(prevSelectedFiles => {
+            const updatedFiles = [...prevSelectedFiles];
+            updatedFiles[index].file = null;
             return updatedFiles;
         });
     };
@@ -260,6 +309,15 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
             />
 
             <TituloPdf />
+
+            {cargando && <div className="fixed z-[500] left-0 top-0 right-0 bottom-0">
+                <div className="w-full h-full bg-black opacity-90 pointer-events-none"></div>
+                <div className="w-full h-full absolute left-0 top-0 text-white flex justify-center items-center flex-col">
+                    <img src={images.logo_poder_judicial} className="w-[10.5rem] mr-0 my-3" alt="Flowbite Logo" />
+                    <div style={{ borderTopColor: "transparent" }} className="w-16 h-16 border-4 border-upla-100 border-solid rounded-full animate-spin"></div>
+                    <h1 className="m-3 text-center">Cargando información...</h1>
+                </div>
+            </div>}
 
             <div className="mx-auto mt-4 max-w-3xl sm:mt-8">
                 <p className="mt-2 text-base leading-8 text-gray-600">
@@ -497,6 +555,29 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
                             />
                         </div>
                     </div>
+
+                    <div>
+                        <label className="block text-sm font-semibold leading-6 text-gray-900">
+                            Corte CSJ
+                        </label>
+                        <div className="mt-0">
+                            <select
+                                ref={refCorteCsj}
+                                value={corteCsj}
+                                onChange={(event: ChangeEvent<HTMLSelectElement>) => {
+                                    setCorteCsj(event.currentTarget.value);
+                                }}
+                                className="block w-full rounded-md border-0 px-3.5 py-0.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-red-900 sm:text-sm sm:leading-6"
+                            >
+                                <option value="">-- Seleccione --</option>
+                                {
+                                    listaCorteCsj.map((item, index) => (
+                                        <option key={index} value={item.id}>{item.nombre_servicio}</option>
+                                    ))
+                                }
+                            </select>
+                        </div>
+                    </div>
                 </div>
 
                 <br />
@@ -696,14 +777,12 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
                 </div>
 
                 <br />
-                <div className="">
-                    
-                        
-                        <legend className="mt-2 text-base leading-8 text-gray-600"><span>FLUJO REALIZADO: </span><span><a className="text-red-7
-                        00" >(Agregar Captura de Caratula)</a></span></legend>
-
-                  
-                </div>
+                <legend className="mt-2 text-base leading-8 text-gray-600">
+                    <span>FLUJO REALIZADO: </span>
+                    <span>
+                        <a className="text-red-700" >(Agregar Captura de Caratula)</a>
+                    </span>
+                </legend>
 
                 <br />
                 {selectedFiles.map((selectedFile, index) => (
@@ -720,10 +799,16 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
                                             onChange={event => handleFileInputChange(event, index)}
                                         />
                                         <button
-                                            className="relative cursor-pointer rounded-md bg-white font-semibold text-red-900 focus-within:outline-none focus-within:ring-2 focus-within:ring-red-900 focus-within:ring-offset-2 hover:text-red-500 mb-4"
-                                            onClick={() => handleUploadButtonClick(index)}
+                                            className="relative block rounded-md bg-red-500 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-sm hover:bg-red-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-900 mb-4"
+                                            onClick={() => handleUploadFileInput(index)}
                                         >
                                             Cargar imagen
+                                        </button>
+                                        <button
+                                            className="relative top-0 right-0 -mt-2 -mr-2 px-4 py-2 text-sm underline rounded-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-900"
+                                            onClick={() => handleRemoveElement(index)}
+                                        >
+                                            Cerrar Sección
                                         </button>
                                         {selectedFile.file && (
                                             <div className="flex flex-col items-center">
@@ -735,7 +820,7 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
                                                     />
                                                     <button
                                                         className="absolute top-0 right-0 -mt-2 -mr-2 px-4 py-2 rounded-full bg-red-500 hover:bg-red-600 text-white"
-                                                        onClick={() => handleRemoveElement(index)}
+                                                        onClick={() => handleRemoveImage(index)}
                                                     >
                                                         X
                                                     </button>
@@ -771,138 +856,6 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
                 </div>
 
                 <br />
-
-                <p className="mt-2 text-base leading-8 text-gray-600">
-                    {" "}
-                    PARAMETROS:{" Desarrollo"}
-                </p>
-
-                <div className="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
-                    <div>
-                        <label className="block text-sm font-semibold leading-6 text-gray-900">
-                            Nombre de Servicio
-                        </label>
-                        <div className="mt-0">
-                            <input
-                                type="text"
-                                ref={refNombreServicio}
-                                value={nombreServicio}
-                                onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                                    setNombreServicio(event.target.value);
-                                }}
-                                autoComplete="family-name"
-                                className="block w-full rounded-md border-0 px-3.5 py-0.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-red-900 sm:text-sm sm:leading-6"
-                            />
-                        </div>
-                    </div>
-                    <div>
-                        <label className="block text-sm font-semibold leading-6 text-gray-900">
-                            Password de BD:
-                        </label>
-                        <div className="mt-0">
-                            <input
-                                type="text"
-                                ref={refPasswordBaseDatos}
-                                value={passwordBaseDatos}
-                                onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                                    setPasswordBaseDatos(event.target.value);
-                                }}
-                                autoComplete="family-name"
-                                className="block w-full rounded-md border-0 px-3.5 py-0.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-red-900 sm:text-sm sm:leading-6"
-                            />
-                        </div>
-                    </div>
-                    <div>
-                        <label className="block text-sm font-semibold leading-6 text-gray-900">
-                            Nombre de BD:
-                        </label>
-                        <div className="mt-0">
-                            <input
-                                type="text"
-                                ref={refPasswordBaseDatos}
-                                value={passwordBaseDatos}
-                                onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                                    setPasswordBaseDatos(event.target.value);
-                                }}
-                                autoComplete="family-name"
-                                className="block w-full rounded-md border-0 px-3.5 py-0.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-red-900 sm:text-sm sm:leading-6"
-                            />
-                        </div>
-                    </div>
-                    <div>
-                        <label className="block text-sm font-semibold leading-6 text-gray-900">
-                            IP:
-                        </label>
-                        <div className="mt-0">
-                            <input
-                                type="text"
-                                ref={refPasswordBaseDatos}
-                                value={passwordBaseDatos}
-                                onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                                    setPasswordBaseDatos(event.target.value);
-                                }}
-                                autoComplete="family-name"
-                                className="block w-full rounded-md border-0 px-3.5 py-0.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-red-900 sm:text-sm sm:leading-6"
-                            />
-                        </div>
-                    </div>
-                    <div>
-                        <label className="block text-sm font-semibold leading-6 text-gray-900">
-                            User ID:
-                        </label>
-                        <div className="mt-0">
-                            <input
-                                type="text"
-                                ref={refPasswordBaseDatos}
-                                value={passwordBaseDatos}
-                                onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                                    setPasswordBaseDatos(event.target.value);
-                                }}
-                                autoComplete="family-name"
-                                className="block w-full rounded-md border-0 px-3.5 py-0.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-red-900 sm:text-sm sm:leading-6"
-                            />
-                        </div>
-                    </div>
-                    <div>
-                        <label className="block text-sm font-semibold leading-6 text-gray-900">
-                            Puerto:
-                        </label>
-                        <div className="mt-0">
-                            <input
-                                type="text"
-                                ref={refPasswordBaseDatos}
-                                value={passwordBaseDatos}
-                                onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                                    setPasswordBaseDatos(event.target.value);
-                                }}
-                                autoComplete="family-name"
-                                className="block w-full rounded-md border-0 px-3.5 py-0.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-red-900 sm:text-sm sm:leading-6"
-                            />
-                        </div>
-                    </div>
-
-                    
-                    {/* <div>
-                        <label className="block text-sm font-semibold leading-6 text-gray-900">
-                            Celular
-                        </label>
-                        <div className="mt-0">
-                            <input
-                                type="text"
-                                ref={refCelularPersona}
-                                value={celularPersona}
-                                onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                                    setCelularPersona(event.target.value);
-                                }}
-                                onKeyDown={keyNumberPhone}
-                                autoComplete="family-name"
-                                className="block w-full rounded-md border-0 px-3.5 py-0.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-red-900 sm:text-sm sm:leading-6"
-                            />
-                        </div>
-                    </div> */}
-                </div>
-
-
 
                 <div className="mt-10">
                     <button
