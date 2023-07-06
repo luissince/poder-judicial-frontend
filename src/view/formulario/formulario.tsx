@@ -569,7 +569,7 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
                                 <option value="">-- Seleccione --</option>
                                 {
                                     listaCorteCsj.map((item, index) => (
-                                        <option key={index} value={item.id}>{item.nombre_corte}</option>
+                                        <option key={index} value={item.id}>{item.nombre_servicio}</option>
                                     ))
                                 }
                             </select>
