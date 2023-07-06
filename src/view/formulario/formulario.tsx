@@ -51,6 +51,8 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
     const refCelularPersona = useRef<HTMLInputElement>(null);
     const refFecha = useRef<HTMLInputElement>(null);
     const refDescripcion = useRef<HTMLTextAreaElement>(null);
+    const refDescripcionImagen = useRef<HTMLTextAreaElement>(null);
+
     const refCorteCsj = useRef<HTMLSelectElement>(null);
 
     const [selectedFiles, setSelectedFiles] = useState<Array<{ ref: React.RefObject<HTMLInputElement>, file: File, description: string }>>([]);
@@ -122,6 +124,12 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
         if (refUsuarioNombre.current && refUsuarioNombre.current.value.trim() === "") {
             refUsuarioNombre.current.focus();
             Alerta("Ingrese los datos del usuario.");
+            return;
+        }
+
+        if (refDescripcionImagen.current && refDescripcionImagen.current.value.trim() === "") {
+            refDescripcionImagen.current.focus();
+            Alerta("Ingrese la descipcion de la imagen.");
             return;
         }
 
@@ -788,7 +796,7 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
                                             onChange={event => handleFileInputChange(event, index)}
                                         />
                                         <button
-                                            className="relative block rounded-md bg-red-500 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-sm hover:bg-red-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-900 mb-4"
+                                            className="relative block rounded-md bg-red-900 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-sm hover:bg-red-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-900 mb-4"
                                             onClick={() => handleUploadFileInput(index)}
                                         >
                                             Cargar imagen
@@ -823,6 +831,7 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
                                     </div>
                                     <div className="mt-5">
                                         <textarea
+                                            ref={refDescripcionImagen}
                                             placeholder="Ingrese la descripción de su captura."
                                             className="block w-full rounded-md border-0 px-3.5 py-0.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-red-900 sm:text-sm sm:leading-6"
                                             value={selectedFile.description}
