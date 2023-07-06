@@ -31,11 +31,11 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
     const [celularPersona, setCelularPersona] = useState("");
     const [fecha, setFecha] = useState(currentDate());
     const [descripcion, setDescripcion] = useState("");
-    const [preguntaUno, setPreguntaUno] = useState('si');
-    const [preguntaDos, setPreguntaDos] = useState('si');
-    const [preguntaTres, setPreguntaTres] = useState('si');
-    const [preguntaCuatro, setPreguntaCuatro] = useState('si');
-    const [preguntaCinco, setPreguntaCinco] = useState('si');
+    const [preguntaUno, setPreguntaUno] = useState('');
+    const [preguntaDos, setPreguntaDos] = useState('');
+    const [preguntaTres, setPreguntaTres] = useState('');
+    const [preguntaCuatro, setPreguntaCuatro] = useState('');
+    const [preguntaCinco, setPreguntaCinco] = useState('');
     const [imagenes, setImagenes] = useState<Imagen[]>([]);
     const [corteCsj, setCorteCsj] = useState('');
     const [listaCorteCsj, setListaCorteCsj] = useState<CorteCsj[]>([]);
@@ -51,6 +51,13 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
     const refCelularPersona = useRef<HTMLInputElement>(null);
     const refFecha = useRef<HTMLInputElement>(null);
     const refDescripcion = useRef<HTMLTextAreaElement>(null);
+    const refPreguntaUno = useRef<HTMLInputElement>(null);
+    const refPreguntaDos = useRef<HTMLInputElement>(null);
+    const refPreguntaTres = useRef<HTMLInputElement>(null);
+    const refPreguntaCuatro = useRef<HTMLInputElement>(null);
+    const refPreguntaCinco = useRef<HTMLInputElement>(null);
+    const refDescripcionImagen = useRef<HTMLTextAreaElement>(null);
+
     const refCorteCsj = useRef<HTMLSelectElement>(null);
 
     const [selectedFiles, setSelectedFiles] = useState<Array<{ ref: React.RefObject<HTMLInputElement>, file: File, description: string }>>([]);
@@ -174,15 +181,51 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
             return;
         }
 
+        console.log(preguntaUno)
+        if (preguntaUno === "") {
+            refPreguntaUno.current.focus();
+            Alerta("Seleccione el primer descarte.");
+            return;
+        }
+
+        if (preguntaDos === "") {
+            refPreguntaDos.current.focus();
+            Alerta("Seleccione el segundo descarte.");
+            return;
+        }
+
+        if (preguntaTres === "") {
+            refPreguntaTres.current.focus();
+            Alerta("Seleccione el tercer descarte.");
+            return;
+        }
+
+        if (preguntaCuatro === "") {
+            refPreguntaCuatro.current.focus();
+            Alerta("Seleccione la cuarta descarte.");
+            return;
+        }
+
+        if (preguntaCinco === "") {
+            refPreguntaCinco.current.focus();
+            Alerta("Seleccione la quinta descarte.");
+            return;
+        }
+
         if (selectedFiles.length == 0) {
             Alerta("Agrega las imagenes correspondientes.");
             return;
         }
 
         let countImage = 0;
+        let countDescripcion = 0;
         for (const item of selectedFiles) {
             if (item.file == null) {
                 countImage++;
+            }
+
+            if (item.description == "") {
+                countDescripcion++;
             }
         }
         if (countImage > 0) {
@@ -190,6 +233,16 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
             return;
         }
 
+        // if (refDescripcionImagen.current && refDescripcionImagen.current.value.trim() === "") {
+        //     refDescripcionImagen.current.focus();
+        //     Alerta("Ingrese la descipcion de la imagen.");
+        //     return;
+        // }
+
+        if (countDescripcion > 0) {
+            Alerta("Hay descripciones de las imagenes sin ingresar.");
+            return;
+        }
 
         let listaImagenes: Imagen[] = [];
         for (const item of selectedFiles) {
@@ -323,7 +376,7 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
                                     <input
                                         id="radio-sij"
                                         name="tipo-sij-web"
-                                        type="radio" 
+                                        type="radio"
                                         ref={refTipoSistema}
                                         className="h-4 w-4 border-gray-300 text-red-900 focus:ring-red-900"
                                         value={"sij"}
@@ -601,7 +654,9 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
                                 <input
                                     id="radio-uno-si"
                                     name="descartes-uno"
-                                    type="radio" className="h-4 w-4 border-gray-300 text-red-900 focus:ring-red-900"
+                                    type="radio"
+                                    ref={refPreguntaUno}
+                                    className="h-4 w-4 border-gray-300 text-red-900 focus:ring-red-900"
                                     value={"si"}
                                     checked={preguntaUno === "si"}
                                     onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
@@ -634,7 +689,9 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
                                 <input
                                     id="radio-dos-si"
                                     name="descartes-dos"
-                                    type="radio" className="h-4 w-4 border-gray-300 text-red-900 focus:ring-red-900"
+                                    type="radio"
+                                    ref={refPreguntaDos}
+                                    className="h-4 w-4 border-gray-300 text-red-900 focus:ring-red-900"
                                     value={"si"}
                                     checked={preguntaDos === "si"}
                                     onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
@@ -667,7 +724,9 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
                                 <input
                                     id="radio-tres-si"
                                     name="descartes-tres"
-                                    type="radio" className="h-4 w-4 border-gray-300 text-red-900 focus:ring-red-900"
+                                    type="radio"
+                                    ref={refPreguntaTres}
+                                    className="h-4 w-4 border-gray-300 text-red-900 focus:ring-red-900"
                                     value={"si"}
                                     checked={preguntaTres === "si"}
                                     onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
@@ -700,7 +759,9 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
                                 <input
                                     id="radio-cuatro-si"
                                     name="descartes-cuatro"
-                                    type="radio" className="h-4 w-4 border-gray-300 text-red-900 focus:ring-red-900"
+                                    type="radio"
+                                    ref={refPreguntaCuatro}
+                                    className="h-4 w-4 border-gray-300 text-red-900 focus:ring-red-900"
                                     value={"si"}
                                     checked={preguntaCuatro === "si"}
                                     onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
@@ -734,7 +795,9 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
                                 <input
                                     id="radio-cinco-si"
                                     name="descartes-cinco"
-                                    type="radio" className="h-4 w-4 border-gray-300 text-red-900 focus:ring-red-900"
+                                    type="radio"
+                                    ref={refPreguntaCinco}
+                                    className="h-4 w-4 border-gray-300 text-red-900 focus:ring-red-900"
                                     value={"si"}
                                     checked={preguntaCinco === "si"}
                                     onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
@@ -777,7 +840,13 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
                 {selectedFiles.map((selectedFile, index) => (
                     <div key={index} className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                         <div className="col-span-full">
-                            <div className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
+                            <div className="relative mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-4 py-10">
+                                <button
+                                    className="absolute  top-0 right-0 -mt-2 -mr-2 px-4 py-4 text-3xl underline rounded-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-900"
+                                    onClick={() => handleRemoveElement(index)}
+                                >
+                                    <i className="bi bi-x-circle"></i>
+                                </button>
                                 <div className="text-center w-full">
                                     <div className="flex flex-col items-center">
                                         <input
@@ -788,17 +857,12 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
                                             onChange={event => handleFileInputChange(event, index)}
                                         />
                                         <button
-                                            className="relative block rounded-md bg-red-500 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-sm hover:bg-red-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-900 mb-4"
+                                            className="relative block rounded-md bg-red-900 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-sm hover:bg-red-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-900 mb-4"
                                             onClick={() => handleUploadFileInput(index)}
                                         >
                                             Cargar imagen
                                         </button>
-                                        <button
-                                            className="relative top-0 right-0 -mt-2 -mr-2 px-4 py-2 text-sm underline rounded-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-900"
-                                            onClick={() => handleRemoveElement(index)}
-                                        >
-                                            Cerrar Sección
-                                        </button>
+
                                         {selectedFile.file && (
                                             <div className="flex flex-col items-center">
                                                 <div className="relative flex-shrink-0 mb-2">
@@ -823,6 +887,7 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
                                     </div>
                                     <div className="mt-5">
                                         <textarea
+                                            ref={refDescripcionImagen}
                                             placeholder="Ingrese la descripción de su captura."
                                             className="block w-full rounded-md border-0 px-3.5 py-0.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-red-900 sm:text-sm sm:leading-6"
                                             value={selectedFile.description}
