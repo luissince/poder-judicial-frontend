@@ -4,7 +4,7 @@ const TituloPdf = () => {
 
     return (
         <div className="mx-auto mt-2 max-w-3xl sm:mt-6">
-            <div className="grid grid-cols-8 w-full border-solid border-2 border-red-700">
+            <div className="grid grid-cols-8 w-full border-solid border-2 border-red-900">
                 <div className="col-start-1 col-end-1 p-2">
                     <img src={images.logo_poder_judicial} alt="logo" />
                 </div>

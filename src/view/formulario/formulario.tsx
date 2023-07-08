@@ -351,15 +351,15 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
             <TituloPdf />
 
             {cargando && <div className="fixed z-[500] left-0 top-0 right-0 bottom-0">
-                <div className="w-full h-full bg-black opacity-90 pointer-events-none"></div>
-                <div className="w-full h-full absolute left-0 top-0 text-white flex justify-center items-center flex-col">
+                <div className="w-full h-full bg-white opacity-90 pointer-events-none"></div>
+                <div className="w-full h-full absolute left-0 top-0 text-black flex justify-center items-center flex-col">
                     <img src={images.logo_poder_judicial} className="w-[10.5rem] mr-0 my-3" alt="Flowbite Logo" />
                     <div style={{ borderTopColor: "transparent" }} className="w-16 h-16 border-4 border-upla-100 border-solid rounded-full animate-spin"></div>
                     <h1 className="m-3 text-center">Cargando información...</h1>
                 </div>
             </div>}
 
-            <div className="mx-auto mt-4 max-w-3xl sm:mt-8">
+            <div className="mx-auto mt-4 max-w-3xl sm:mt-8 border-solid bg-gray-100 p-5 border-gray-300 border-2">
                 <p className="mt-2 text-base leading-8 text-gray-600">
                     {" "}
                     INFORMACIÓN DEL SISTEMA:{" "}
@@ -368,7 +368,7 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
                 <div className="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-3">
                     <div>
                         <label className="block text-sm font-semibold leading-6 text-gray-900">
-                            Tipo de Sistema
+                            Tipo de Sistema <a className="text-red-500" >(*)</a>
                         </label>
                         <fieldset>
                             <div className="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
@@ -405,7 +405,7 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
 
                     <div>
                         <label className="block text-sm font-semibold leading-6 text-gray-900">
-                            Por Seleccionar
+                            Sistema
                         </label>
                         <div className="mt-0">
                             <select
@@ -418,7 +418,7 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
                             >
                                 {
                                     tipoSistema == "" ?
-                                        <option value="">- -</option>
+                                        <option value="">-- Seleccione --</option>
                                         :
 
                                         tipoSistema == "sij" ?
@@ -463,7 +463,7 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
                 <div className="grid grid-cols-1 gap-x-8 gap-y-1 sm:grid-cols-2">
                     <div>
                         <label className="block text-sm font-semibold leading-6 text-gray-900">
-                            Nombre y Apellidos
+                            Nombre y Apellidos / ID
                         </label>
                         <div className="mt-0">
                             <input
@@ -614,7 +614,7 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
                                 <option value="">-- Seleccione --</option>
                                 {
                                     listaCorteCsj.map((item, index) => (
-                                        <option key={index} value={item.id}>{item.nombre_servicio}</option>
+                                        <option key={index} value={item.id}>{item.nombre_corte}</option>
                                     ))
                                 }
                             </select>
@@ -822,30 +822,36 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
                     </fieldset>
                 </div>
 
+                <br />
+
+                <legend className="mt-2 text-base leading-8 text-gray-600">
+                    <span>FLUJO REALIZADO: </span>
+                    <span>
+                        <a className="text-red-700" >Consideraciones (*)</a>
+                    </span>
+                </legend>
+
                 <div className="mt-2">
                     <fieldset>
-                        <legend className="text-sm leading-6 text-gray-900"><span>6. El PBTRACE.log debe adjuntarse de forma obligatoria en el ticket: </span><span><a className="text-red-500" href="https://drive.google.com/drive/folders/1tb-IgfclBNx_7HDBwE_hSrMGkkr_5ABT?usp=sharing" target="_blank">Click ver Manual</a></span></legend>
+                        <legend className="text-sm leading-6 text-gray-900"><span>- Adjuntar la caratula del expediente </span><span><a className="text-red-500" >(*)</a></span></legend>
+                        <legend className="text-sm leading-6 text-gray-900"><span>- Las capturas de pantalla deben ser completas </span><span><a className="text-red-500" >(*)</a></span></legend>
+                        <legend className="text-sm leading-6 text-gray-900"><span>- Debe visualizarse el usuario y version del SIJ </span><span><a className="text-red-500" >(*)</a></span></legend>
+                        <legend className="text-sm leading-6 text-gray-900"><span>- El PBTRACE.log debe adjuntarse de forma obligatoria en el ticket: </span><span><a className="text-red-500" href="https://drive.google.com/drive/folders/1tb-IgfclBNx_7HDBwE_hSrMGkkr_5ABT?usp=sharing" target="_blank">Click ver Manual (*)</a></span></legend>
+
                     </fieldset>
                 </div>
 
                 <br />
-                <legend className="mt-2 text-base leading-8 text-gray-600">
-                    <span>FLUJO REALIZADO: </span>
-                    <span>
-                        <a className="text-red-700" >(Agregar Captura de Caratula)</a>
-                    </span>
-                </legend>
-
                 <br />
                 {selectedFiles.map((selectedFile, index) => (
                     <div key={index} className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                         <div className="col-span-full">
-                            <div className="relative mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-4 py-10">
+                            <div className="relative mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/50 px-4 py-10">
                                 <button
                                     className="absolute  top-0 right-0 -mt-2 -mr-2 px-4 py-4 text-3xl underline rounded-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-900"
                                     onClick={() => handleRemoveElement(index)}
                                 >
-                                    <i className="bi bi-x-circle"></i>
+                                    <i className="bi bi-x-circle text-red-900"></i>
                                 </button>
                                 <div className="text-center w-full">
                                     <div className="flex flex-col items-center">
