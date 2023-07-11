@@ -29,7 +29,7 @@ const MostrarPdf = (props: Props) => {
             isOpen={props.isOpen}
             onOpen={async () => {
                 setCargando(true)
-                setCargando(false)
+                setResultado(false)
                 setMensaje("Generando PDF...")
                 const data: Formulario = {
                     nombreSistema: props.data.nombreSistema,
@@ -75,7 +75,9 @@ const MostrarPdf = (props: Props) => {
                 }
             }}
             onHidden={() => {
+                setDocs([]);
                 setCargando(false)
+                setResultado(true);
             }}
         >
             <div className="flex items-center justify-center w-full h-full">
