@@ -110,7 +110,7 @@ const MostrarPdf = (props: Props) => {
                                     if (cargando) {
                                         return
                                     }
-                                    props.handleClose
+                                    props.handleClose()
                                 }}
                             >
                                 Cerrar <i className="bi bi-x-circle"></i>
