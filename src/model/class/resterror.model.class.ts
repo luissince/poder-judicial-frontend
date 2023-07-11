@@ -15,7 +15,7 @@ class RestError {
                 this.message = this.handleError(error.response.status, error.response.data);
             } else if (error.request) {
                 this.type = Types.REQUEST;
-                this.message = "No se pudo obtener la respuesta del servidor.";
+                this.message =error.message || "No se pudo obtener la respuesta del servidor.";
             } else {
                 if (error.message === "canceled") {
                     this.type = Types.CANCELED;
