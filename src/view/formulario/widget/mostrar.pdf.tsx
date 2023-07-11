@@ -92,7 +92,7 @@ const MostrarPdf = (props: Props) => {
                             </button>
                         </div>
                         <br />
-                        <div className="relative w-full overflow-auto border-2 border-indigo-500">
+                        <div className="relative w-full overflow-auto border-2 border-indigo-500 h-screen">
                             {
                                 cargando ?
                                     <div className="obsolute z-[500] left-0 top-0 right-0 bottom-0">
