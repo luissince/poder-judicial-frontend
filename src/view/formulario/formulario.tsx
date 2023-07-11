@@ -64,7 +64,6 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
 
     const [isOpen, setIsOpen] = useState(false);
     const iframeRef = useRef<HTMLIFrameElement>(null);
-    const [zoomLevel, setZoomLevel] = useState(100);
 
     const abortControllerCorteCsj = useRef(new AbortController());
 
@@ -181,7 +180,6 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
             return;
         }
 
-        console.log(preguntaUno)
         if (preguntaUno === "") {
             refPreguntaUno.current.focus();
             Alerta("Seleccione el primer descarte.");
@@ -316,18 +314,6 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
         setIsOpen(false);
     };
 
-    const handleZoomIn = () => {
-        if (zoomLevel < 200) {
-            setZoomLevel(zoomLevel + 10);
-        }
-    };
-
-    const handleZoomOut = () => {
-        if (zoomLevel > 10) {
-            setZoomLevel(zoomLevel - 10);
-        }
-    };
-
     const handlePrint = () => {
         if (iframeRef.current) {
             iframeRef.current.contentWindow?.print();
@@ -340,11 +326,7 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
                 isOpen={isOpen}
                 data={data}
                 iframeRef={iframeRef}
-                zoomLevel={zoomLevel}
-                setZoomLevel={setZoomLevel}
                 handleClose={handleClose}
-                handleZoomIn={handleZoomIn}
-                handleZoomOut={handleZoomOut}
                 handlePrint={handlePrint}
             />
 

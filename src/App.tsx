@@ -8,6 +8,7 @@ import Acceso from './view/acceso/Acceso';
 import Busqueda from './view/busqueda/Busqueda';
 import Formulario from './view/formulario/formulario';
 
+
 function App() {
 
   const cargando = useSelector((state: RootState) => state.autenticacion.cargando);
