@@ -51,11 +51,13 @@ const MostrarPdf = (props: Props) => {
                 const response = await ObtenerPdf<Blob>(data);
 
                 if (response instanceof Response) {
-                    const pdfBlob = new Blob([response.data], { type: "application/pdf" });
+                    let pdfBlob = new Blob([response.data], { type: "application/pdf" });
+
                     const pdfUrl = URL.createObjectURL(pdfBlob);
                     const url = [
                         {
-                            uri: pdfUrl
+                            uri: pdfUrl,
+                            fileName: props.data.nombreSistema+'.pdf', 
                         }
                     ]
                     setDocs(url);
