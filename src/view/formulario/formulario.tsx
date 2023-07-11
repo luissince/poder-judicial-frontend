@@ -16,6 +16,7 @@ import CorteCsj from "../../model/interfaces/cortecsj";
 import Response from "../../model/class/response.model.class";
 import RestError from "../../model/class/resterror.model.class";
 import { Types } from "../../model/enum/types.model";
+import { DocViewerRef } from "@cyntler/react-doc-viewer";
 
 const FormularioView = (props: RouteComponentProps<{}>) => {
 
@@ -63,7 +64,7 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
     const [selectedFiles, setSelectedFiles] = useState<Array<{ ref: React.RefObject<HTMLInputElement>, file: File, description: string }>>([]);
 
     const [isOpen, setIsOpen] = useState(false);
-    const iframeRef = useRef<HTMLIFrameElement>(null);
+    const iframeRef = useRef<DocViewerRef>(null);
 
     const abortControllerCorteCsj = useRef(new AbortController());
 
@@ -314,10 +315,11 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
         setIsOpen(false);
     };
 
-    const handlePrint = () => {
-        if (iframeRef.current) {
-            iframeRef.current.contentWindow?.print();
-        }
+    const handlePrint = (blobUrl: string) => {
+        const printWindow = window.open(blobUrl, "_blank");
+        printWindow.onload = () => {
+            printWindow.print();
+        };
     }
 
     return (

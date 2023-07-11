@@ -5,15 +5,15 @@ import { ObtenerPdf } from "../../../network/rest/index.network";
 import RestError from "../../../model/class/resterror.model.class";
 import Response from "../../../model/class/response.model.class";
 import { images } from "../../../helper/index.helper";
-import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
+import DocViewer, { DocViewerRenderers , DocViewerRef} from "@cyntler/react-doc-viewer";
 
 
 type Props = {
     isOpen: boolean,
     data: Formulario,
-    iframeRef: React.RefObject<HTMLIFrameElement>,
+    iframeRef: React.RefObject<DocViewerRef>,
     handleClose: () => void,
-    handlePrint: () => void,
+    handlePrint: (url: string) => void,
 }
 
 const MostrarPdf = (props: Props) => {
@@ -80,7 +80,9 @@ const MostrarPdf = (props: Props) => {
                             
                             <button
                                 className="block w-full sm:w-auto rounded-md bg-indigo-600 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                                onClick={props.handlePrint}
+                                onClick={()=>{
+                                    props.handlePrint(docs[0].uri)
+                                }}
                             >
                                 Imprimir <i className="bi bi-printer"></i>
                             </button>
@@ -105,25 +107,13 @@ const MostrarPdf = (props: Props) => {
                                     </div>
                                     :
                                     <DocViewer
+                                        ref={props.iframeRef}
                                         documents={docs}
                                         initialActiveDocument={docs[1]}
                                         pluginRenderers={DocViewerRenderers}
                                     />
                             }
-
-                            {/* <iframe
-                                ref={props.iframeRef}
-                                title="PDF Viewer"
-                                width="100%"
-                                height="600"
-                                style={{ transform: `scale(${props.zoomLevel / 100})` }}
-                            /> */}
-
-
-
-
                         </div>
-
                     </div>
                 </div>
             </div>
