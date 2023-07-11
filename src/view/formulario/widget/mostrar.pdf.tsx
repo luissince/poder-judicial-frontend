@@ -14,6 +14,7 @@ type Props = {
     iframeRef: React.RefObject<DocViewerRef>,
     handleClose: () => void,
     handlePrint: (url: string) => void,
+    handleDownload: (url: string, nombre: string) => void
 }
 
 const MostrarPdf = (props: Props) => {
@@ -77,7 +78,14 @@ const MostrarPdf = (props: Props) => {
                 <div className="w-full p-10">
                     <div className="relative z-10">
                         <div className="flex justify-center items-center flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0">
-                            
+                        <button
+                                className="block w-full sm:w-auto rounded-md bg-indigo-600 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                onClick={()=>{
+                                    props.handleDownload(docs[0].uri, props.data.nombreSistema+'.pdf')
+                                }}
+                            >
+                                Descargar <i className="bi bi-cloud-download"></i>
+                            </button>
                             <button
                                 className="block w-full sm:w-auto rounded-md bg-indigo-600 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                                 onClick={()=>{

@@ -315,6 +315,13 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
         setIsOpen(false);
     };
 
+    const handleDownload = (blobUrl: string, nombre: string) => {
+        const anchorElement = document.createElement("a");
+        anchorElement.href = blobUrl;
+        anchorElement.download = nombre; // Asigna el nombre deseado al archivo
+        anchorElement.click();
+    }
+
     const handlePrint = (blobUrl: string) => {
         const printWindow = window.open(blobUrl, "_blank");
         printWindow.onload = () => {
@@ -330,6 +337,7 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
                 iframeRef={iframeRef}
                 handleClose={handleClose}
                 handlePrint={handlePrint}
+                handleDownload={handleDownload}
             />
 
             <TituloPdf />
