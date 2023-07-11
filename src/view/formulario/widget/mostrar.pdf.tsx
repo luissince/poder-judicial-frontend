@@ -5,7 +5,7 @@ import { ObtenerPdf } from "../../../network/rest/index.network";
 import RestError from "../../../model/class/resterror.model.class";
 import Response from "../../../model/class/response.model.class";
 import { images } from "../../../helper/index.helper";
-import DocViewer, { DocViewerRenderers , DocViewerRef} from "@cyntler/react-doc-viewer";
+import DocViewer, { DocViewerRenderers, DocViewerRef } from "@cyntler/react-doc-viewer";
 
 
 type Props = {
@@ -20,6 +20,7 @@ type Props = {
 const MostrarPdf = (props: Props) => {
 
     const [cargando, setCargando] = useState(true)
+    const [resultado, setResultado] = useState(false)
     const [mensaje, setMensaje] = useState("Generando PDF...");
     const [docs, setDocs] = useState([]);
 
@@ -28,6 +29,7 @@ const MostrarPdf = (props: Props) => {
             isOpen={props.isOpen}
             onOpen={async () => {
                 setCargando(true)
+                setCargando(false)
                 setMensaje("Generando PDF...")
                 const data: Formulario = {
                     nombreSistema: props.data.nombreSistema,
@@ -58,15 +60,17 @@ const MostrarPdf = (props: Props) => {
                     const url = [
                         {
                             uri: pdfUrl,
-                            fileName: props.data.nombreSistema+'.pdf', 
+                            fileName: props.data.nombreSistema + '.pdf',
                         }
                     ]
                     setDocs(url);
                     setCargando(false);
+                    setResultado(true);
                 }
 
                 if (response instanceof RestError) {
                     setCargando(false);
+                    setResultado(false);
                     setMensaje(response.getMessage());
                 }
             }}
@@ -78,17 +82,23 @@ const MostrarPdf = (props: Props) => {
                 <div className="w-full p-10">
                     <div className="relative z-10">
                         <div className="flex justify-center items-center flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0">
-                        <button
+                            <button
                                 className="block w-full sm:w-auto rounded-md bg-indigo-600 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                                onClick={()=>{
-                                    props.handleDownload(docs[0].uri, props.data.nombreSistema+'.pdf')
+                                onClick={() => {
+                                    if (cargando) {
+                                        return
+                                    }
+                                    props.handleDownload(docs[0].uri, props.data.nombreSistema + '.pdf')
                                 }}
                             >
                                 Descargar <i className="bi bi-cloud-download"></i>
                             </button>
                             <button
                                 className="block w-full sm:w-auto rounded-md bg-indigo-600 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                                onClick={()=>{
+                                onClick={() => {
+                                    if (cargando) {
+                                        return
+                                    }
                                     props.handlePrint(docs[0].uri)
                                 }}
                             >
@@ -96,7 +106,12 @@ const MostrarPdf = (props: Props) => {
                             </button>
                             <button
                                 className="block w-full sm:w-auto rounded-md bg-red-600 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
-                                onClick={props.handleClose}
+                                onClick={() => {
+                                    if (cargando) {
+                                        return
+                                    }
+                                    props.handleClose
+                                }}
                             >
                                 Cerrar <i className="bi bi-x-circle"></i>
                             </button>
@@ -104,7 +119,7 @@ const MostrarPdf = (props: Props) => {
                         <br />
                         <div className="relative w-full overflow-auto border-2 border-indigo-500 h-screen">
                             {
-                                cargando ?
+                                cargando && !resultado ?
                                     <div className="obsolute z-[500] left-0 top-0 right-0 bottom-0">
                                         <div className="w-full h-full bg-black opacity-90 pointer-events-none"></div>
                                         <div className="w-full h-full absolute left-0 top-0  flex justify-center items-center flex-col">
@@ -114,12 +129,21 @@ const MostrarPdf = (props: Props) => {
                                         </div>
                                     </div>
                                     :
-                                    <DocViewer
-                                        ref={props.iframeRef}
-                                        documents={docs}
-                                        initialActiveDocument={docs[1]}
-                                        pluginRenderers={DocViewerRenderers}
-                                    />
+                                    !resultado ?
+                                        <div className="obsolute z-[500] left-0 top-0 right-0 bottom-0">
+                                            <div className="w-full h-full bg-black opacity-90 pointer-events-none"></div>
+                                            <div className="w-full h-full absolute left-0 top-0  flex justify-center items-center flex-col">
+                                                <img src={images.logo_poder_judicial} className="w-[10.5rem] mr-0 my-3" alt="Flowbite Logo" />
+                                                <h1 className="m-3 text-center text-gray-500 ">{mensaje}</h1>
+                                            </div>
+                                        </div>
+                                        :
+                                        <DocViewer
+                                            ref={props.iframeRef}
+                                            documents={docs}
+                                            initialActiveDocument={docs[1]}
+                                            pluginRenderers={DocViewerRenderers}
+                                        />
                             }
                         </div>
                     </div>
