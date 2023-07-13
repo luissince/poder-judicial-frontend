@@ -24,61 +24,67 @@ const MostrarPdf = (props: Props) => {
     const [mensaje, setMensaje] = useState("Generando PDF...");
     const [docs, setDocs] = useState([]);
 
+    const onEventOpenModal = async () => {
+        document.body.style.overflow = 'hidden';
+        setCargando(true)
+        setResultado(false)
+        setMensaje("Generando PDF...")
+        const data: Formulario = {
+            nombreSistema: props.data.nombreSistema,
+            versionSistema: props.data.versionSistema,
+            usuarioNombre: props.data.usuarioNombre,
+            celularAxeso: props.data.celularAxeso,
+            sede: props.data.sede,
+            cargo: props.data.cargo,
+            personaReporte: props.data.personaReporte,
+            celularPersona: props.data.celularPersona,
+            fecha: props.data.fecha,
+            descripcion: props.data.descripcion,
+            imagenes: props.data.imagenes,
+            preguntaUno: props.data.preguntaUno,
+            preguntaDos: props.data.preguntaDos,
+            preguntaTres: props.data.preguntaTres,
+            preguntaCuatro: props.data.preguntaCuatro,
+            preguntaCinco: props.data.preguntaCinco,
+            idCorteCsj: props.data.idCorteCsj,
+        };
+
+        const response = await ObtenerPdf<Blob>(data);
+
+        if (response instanceof Response) {
+            let pdfBlob = new Blob([response.data], { type: "application/pdf" });
+
+            const pdfUrl = URL.createObjectURL(pdfBlob);
+            const url = [
+                {
+                    uri: pdfUrl,
+                    fileName: props.data.nombreSistema + '.pdf',
+                }
+            ]
+            setDocs(url);
+            setCargando(false);
+            setResultado(true);
+        }
+
+        if (response instanceof RestError) {
+            setCargando(false);
+            setResultado(false);
+            setMensaje(response.getMessage());
+        }
+    }
+
+    const onEventOpenClose = () => {
+        document.body.style.overflow = 'auto';
+        setDocs([]);
+        setCargando(false)
+        setResultado(true);
+    }
+
     return (
         <CustomModal
             isOpen={props.isOpen}
-            onOpen={async () => {
-                setCargando(true)
-                setResultado(false)
-                setMensaje("Generando PDF...")
-                const data: Formulario = {
-                    nombreSistema: props.data.nombreSistema,
-                    versionSistema: props.data.versionSistema,
-                    usuarioNombre: props.data.usuarioNombre,
-                    celularAxeso: props.data.celularAxeso,
-                    sede: props.data.sede,
-                    cargo: props.data.cargo,
-                    personaReporte: props.data.personaReporte,
-                    celularPersona: props.data.celularPersona,
-                    fecha: props.data.fecha,
-                    descripcion: props.data.descripcion,
-                    imagenes: props.data.imagenes,
-                    preguntaUno: props.data.preguntaUno,
-                    preguntaDos: props.data.preguntaDos,
-                    preguntaTres: props.data.preguntaTres,
-                    preguntaCuatro: props.data.preguntaCuatro,
-                    preguntaCinco: props.data.preguntaCinco,
-                    idCorteCsj: props.data.idCorteCsj,
-                };
-
-                const response = await ObtenerPdf<Blob>(data);
-
-                if (response instanceof Response) {
-                    let pdfBlob = new Blob([response.data], { type: "application/pdf" });
-
-                    const pdfUrl = URL.createObjectURL(pdfBlob);
-                    const url = [
-                        {
-                            uri: pdfUrl,
-                            fileName: props.data.nombreSistema + '.pdf',
-                        }
-                    ]
-                    setDocs(url);
-                    setCargando(false);
-                    setResultado(true);
-                }
-
-                if (response instanceof RestError) {
-                    setCargando(false);
-                    setResultado(false);
-                    setMensaje(response.getMessage());
-                }
-            }}
-            onHidden={() => {
-                setDocs([]);
-                setCargando(false)
-                setResultado(true);
-            }}
+            onOpen={onEventOpenModal}
+            onHidden={onEventOpenClose}
         >
             <div className="flex items-center justify-center w-full h-full">
                 <div className="w-full p-10">
