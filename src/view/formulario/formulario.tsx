@@ -17,6 +17,8 @@ import Response from "../../model/class/response.model.class";
 import RestError from "../../model/class/resterror.model.class";
 import { Types } from "../../model/enum/types.model";
 import { DocViewerRef } from "@cyntler/react-doc-viewer";
+import { RiImageAddFill } from "react-icons/ri";
+
 
 const FormularioView = (props: RouteComponentProps<{}>) => {
 
@@ -638,188 +640,197 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
                 <br />
                 <p className="mt-2 text-base leading-8 text-gray-600"> DESCARTES: </p>
 
-                <div className="mt-2">
-                    <fieldset>
-                        <legend className="text-sm leading-6 text-gray-900">1. ¿El mismo incidente se reproduce en otro equipo?</legend>
-                        <div className="mt-2 space-y-2">
-                            <div className="flex items-center gap-x-3">
-                                <input
-                                    id="radio-uno-si"
-                                    name="descartes-uno"
-                                    type="radio"
-                                    ref={refPreguntaUno}
-                                    className="h-4 w-4 border-gray-300 text-red-900 focus:ring-red-900"
-                                    value={"si"}
-                                    checked={preguntaUno === "si"}
-                                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                        setPreguntaUno(event.target.value)
-                                    }} />
-                                <label htmlFor="radio-uno-si" className="block text-xs font-medium leading-6 text-gray-900">Si</label>
+                <div className="grid grid-cols-2 gap-4">
+                    {/* Primera columna */}
+                    <div className="mt-2">
+                        <fieldset>
+                            <legend className="text-sm leading-6 text-gray-900">1. ¿El mismo incidente se reproduce en otro equipo?</legend>
+                            <div className="mt-2 space-y-2">
+                                <div className="flex items-center gap-x-3">
+                                    <input
+                                        id="radio-uno-si"
+                                        name="descartes-uno"
+                                        type="radio"
+                                        ref={refPreguntaUno}
+                                        className="h-4 w-4 border-gray-300 text-red-900 focus:ring-red-900"
+                                        value={"si"}
+                                        checked={preguntaUno === "si"}
+                                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                            setPreguntaUno(event.target.value)
+                                        }} />
+                                    <label htmlFor="radio-uno-si" className="block text-xs font-medium leading-6 text-gray-900">Si</label>
+                                </div>
+                                <div className="flex items-center gap-x-3">
+                                    <input
+                                        id="radio-uno-no"
+                                        name="descartes-uno"
+                                        type="radio"
+                                        className="h-4 w-4 border-gray-300 text-red-900 focus:ring-red-900"
+                                        value={"no"}
+                                        checked={preguntaUno === "no"}
+                                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                            setPreguntaUno(event.target.value)
+                                        }} />
+                                    <label htmlFor="radio-uno-no" className="block text-xs font-medium leading-6 text-gray-900">No</label>
+                                </div>
                             </div>
-                            <div className="flex items-center gap-x-3">
-                                <input
-                                    id="radio-uno-no"
-                                    name="descartes-uno"
-                                    type="radio"
-                                    className="h-4 w-4 border-gray-300 text-red-900 focus:ring-red-900"
-                                    value={"no"}
-                                    checked={preguntaUno === "no"}
-                                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                        setPreguntaUno(event.target.value)
-                                    }} />
-                                <label htmlFor="radio-uno-no" className="block text-xs font-medium leading-6 text-gray-900">No</label>
+                        </fieldset>
+                    </div>
+
+                    {/* Segunda columna */}
+                    <div className="mt-2">
+                        <fieldset>
+                            <legend className="text-sm leading-6 text-gray-900"> 2. ¿El mismo incidente se reproduce con otros usuarios?</legend>
+                            <div className="mt-2 space-y-2">
+                                <div className="flex items-center gap-x-3">
+                                    <input
+                                        id="radio-dos-si"
+                                        name="descartes-dos"
+                                        type="radio"
+                                        ref={refPreguntaDos}
+                                        className="h-4 w-4 border-gray-300 text-red-900 focus:ring-red-900"
+                                        value={"si"}
+                                        checked={preguntaDos === "si"}
+                                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                            setPreguntaDos(event.target.value)
+                                        }} />
+                                    <label htmlFor="radio-dos-si" className="block text-xs font-medium leading-6 text-gray-900">Si</label>
+                                </div>
+                                <div className="flex items-center gap-x-3">
+                                    <input
+                                        id="radio-dos-no"
+                                        name="descartes-dos"
+                                        type="radio"
+                                        className="h-4 w-4 border-gray-300 text-red-900 focus:ring-red-900"
+                                        value={"no"}
+                                        checked={preguntaDos === "no"}
+                                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                            setPreguntaDos(event.target.value)
+                                        }} />
+                                    <label htmlFor="radio-dos-no" className="block text-xs font-medium leading-6 text-gray-900">No</label>
+                                </div>
                             </div>
-                        </div>
-                    </fieldset>
+                        </fieldset>
+                    </div>
                 </div>
 
-                <div className="mt-2">
-                    <fieldset>
-                        <legend className="text-sm leading-6 text-gray-900"> 2. ¿El mismo incidente se reproduce con otros usuarios?</legend>
-                        <div className="mt-2 space-y-2">
-                            <div className="flex items-center gap-x-3">
-                                <input
-                                    id="radio-dos-si"
-                                    name="descartes-dos"
-                                    type="radio"
-                                    ref={refPreguntaDos}
-                                    className="h-4 w-4 border-gray-300 text-red-900 focus:ring-red-900"
-                                    value={"si"}
-                                    checked={preguntaDos === "si"}
-                                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                        setPreguntaDos(event.target.value)
-                                    }} />
-                                <label htmlFor="radio-dos-si" className="block text-xs font-medium leading-6 text-gray-900">Si</label>
+                <div className="grid grid-cols-2 gap-4">
+                    {/* Primera columna */}
+                    <div className="mt-2">
+                        <fieldset>
+                            <legend className="text-sm leading-6 text-gray-900">3. ¿El incidente ocurre solo con un expediente?</legend>
+                            <div className="mt-2 space-y-2">
+                                <div className="flex items-center gap-x-3">
+                                    <input
+                                        id="radio-tres-si"
+                                        name="descartes-tres"
+                                        type="radio"
+                                        ref={refPreguntaTres}
+                                        className="h-4 w-4 border-gray-300 text-red-900 focus:ring-red-900"
+                                        value={"si"}
+                                        checked={preguntaTres === "si"}
+                                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                            setPreguntaTres(event.target.value)
+                                        }} />
+                                    <label htmlFor="radio-tres-si" className="block text-xs font-medium leading-6 text-gray-900">Si</label>
+                                </div>
+                                <div className="flex items-center gap-x-3">
+                                    <input
+                                        id="radio-tres-no"
+                                        name="descartes-tres"
+                                        type="radio"
+                                        className="h-4 w-4 border-gray-300 text-red-900 focus:ring-red-900"
+                                        value={"no"}
+                                        checked={preguntaTres === "no"}
+                                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                            setPreguntaTres(event.target.value)
+                                        }} />
+                                    <label htmlFor="radio-tres-no" className="block text-xs font-medium leading-6 text-gray-900">No</label>
+                                </div>
                             </div>
-                            <div className="flex items-center gap-x-3">
-                                <input
-                                    id="radio-dos-no"
-                                    name="descartes-dos"
-                                    type="radio"
-                                    className="h-4 w-4 border-gray-300 text-red-900 focus:ring-red-900"
-                                    value={"no"}
-                                    checked={preguntaDos === "no"}
-                                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                        setPreguntaDos(event.target.value)
-                                    }} />
-                                <label htmlFor="radio-dos-no" className="block text-xs font-medium leading-6 text-gray-900">No</label>
+                        </fieldset>
+                    </div>
+                    {/* Segunda columna */}
+                    <div className="mt-2">
+                        <fieldset>
+                            <legend className="text-sm leading-6 text-gray-900">4. ¿Lo reportado ha sido validado por implantación?</legend>
+                            <div className="mt-2 space-y-2">
+                                <div className="flex items-center gap-x-3">
+                                    <input
+                                        id="radio-cuatro-si"
+                                        name="descartes-cuatro"
+                                        type="radio"
+                                        ref={refPreguntaCuatro}
+                                        className="h-4 w-4 border-gray-300 text-red-900 focus:ring-red-900"
+                                        value={"si"}
+                                        checked={preguntaCuatro === "si"}
+                                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                            setPreguntaCuatro(event.target.value)
+                                        }} />
+                                    <label htmlFor="radio-cuatro-si" className="block text-xs font-medium leading-6 text-gray-900">Si</label>
+                                </div>
+                                <div className="flex items-center gap-x-3">
+                                    <input
+                                        id="radio-cuatro-no"
+                                        name="descartes-cuatro"
+                                        type="radio"
+                                        className="h-4 w-4 border-gray-300 text-red-900 focus:ring-red-900"
+                                        value={"no"}
+                                        checked={preguntaCuatro === "no"}
+                                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                            setPreguntaCuatro(event.target.value)
+                                        }} />
+                                    <label htmlFor="radio-cuatro-no" className="block text-xs font-medium leading-6 text-gray-900">No</label>
+                                </div>
                             </div>
-                        </div>
-                    </fieldset>
+                        </fieldset>
+                    </div>
                 </div>
-
-                <div className="mt-2">
-                    <fieldset>
-                        <legend className="text-sm leading-6 text-gray-900">3. ¿El incidente ocurre solo con un expediente?</legend>
-                        <div className="mt-2 space-y-2">
-                            <div className="flex items-center gap-x-3">
-                                <input
-                                    id="radio-tres-si"
-                                    name="descartes-tres"
-                                    type="radio"
-                                    ref={refPreguntaTres}
-                                    className="h-4 w-4 border-gray-300 text-red-900 focus:ring-red-900"
-                                    value={"si"}
-                                    checked={preguntaTres === "si"}
-                                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                        setPreguntaTres(event.target.value)
-                                    }} />
-                                <label htmlFor="radio-tres-si" className="block text-xs font-medium leading-6 text-gray-900">Si</label>
+                <div className="grid grid-cols-2 gap-4">
+                    {/* Primera columna */}
+                    <div className="mt-2">
+                        <fieldset>
+                            <legend className="text-sm leading-6 text-gray-900">5. ¿Se está utilizando la última versión de la aplicación
+                                desplegada en la corte?</legend>
+                            <div className="mt-2 space-y-2">
+                                <div className="flex items-center gap-x-3">
+                                    <input
+                                        id="radio-cinco-si"
+                                        name="descartes-cinco"
+                                        type="radio"
+                                        ref={refPreguntaCinco}
+                                        className="h-4 w-4 border-gray-300 text-red-900 focus:ring-red-900"
+                                        value={"si"}
+                                        checked={preguntaCinco === "si"}
+                                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                            setPreguntaCinco(event.target.value)
+                                        }} />
+                                    <label htmlFor="radio-cinco-si" className="block text-xs font-medium leading-6 text-gray-900">Si</label>
+                                </div>
+                                <div className="flex items-center gap-x-3">
+                                    <input
+                                        id="radio-cinco-no"
+                                        name="descartes-cinco"
+                                        type="radio"
+                                        className="h-4 w-4 border-gray-300 text-red-900 focus:ring-red-900"
+                                        value={"no"}
+                                        checked={preguntaCinco === "no"}
+                                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                            setPreguntaCinco(event.target.value)
+                                        }} />
+                                    <label htmlFor="radio-cinco-no" className="block text-xs font-medium leading-6 text-gray-900">No</label>
+                                </div>
                             </div>
-                            <div className="flex items-center gap-x-3">
-                                <input
-                                    id="radio-tres-no"
-                                    name="descartes-tres"
-                                    type="radio"
-                                    className="h-4 w-4 border-gray-300 text-red-900 focus:ring-red-900"
-                                    value={"no"}
-                                    checked={preguntaTres === "no"}
-                                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                        setPreguntaTres(event.target.value)
-                                    }} />
-                                <label htmlFor="radio-tres-no" className="block text-xs font-medium leading-6 text-gray-900">No</label>
-                            </div>
-                        </div>
-                    </fieldset>
-                </div>
-
-                <div className="mt-2">
-                    <fieldset>
-                        <legend className="text-sm leading-6 text-gray-900">4. ¿Lo reportado ha sido validado por implantación?</legend>
-                        <div className="mt-2 space-y-2">
-                            <div className="flex items-center gap-x-3">
-                                <input
-                                    id="radio-cuatro-si"
-                                    name="descartes-cuatro"
-                                    type="radio"
-                                    ref={refPreguntaCuatro}
-                                    className="h-4 w-4 border-gray-300 text-red-900 focus:ring-red-900"
-                                    value={"si"}
-                                    checked={preguntaCuatro === "si"}
-                                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                        setPreguntaCuatro(event.target.value)
-                                    }} />
-                                <label htmlFor="radio-cuatro-si" className="block text-xs font-medium leading-6 text-gray-900">Si</label>
-                            </div>
-                            <div className="flex items-center gap-x-3">
-                                <input
-                                    id="radio-cuatro-no"
-                                    name="descartes-cuatro"
-                                    type="radio"
-                                    className="h-4 w-4 border-gray-300 text-red-900 focus:ring-red-900"
-                                    value={"no"}
-                                    checked={preguntaCuatro === "no"}
-                                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                        setPreguntaCuatro(event.target.value)
-                                    }} />
-                                <label htmlFor="radio-cuatro-no" className="block text-xs font-medium leading-6 text-gray-900">No</label>
-                            </div>
-                        </div>
-                    </fieldset>
-                </div>
-
-                <div className="mt-2">
-                    <fieldset>
-                        <legend className="text-sm leading-6 text-gray-900">5. ¿Se está utilizando la última versión de la aplicación
-                            desplegada en la corte?</legend>
-                        <div className="mt-2 space-y-2">
-                            <div className="flex items-center gap-x-3">
-                                <input
-                                    id="radio-cinco-si"
-                                    name="descartes-cinco"
-                                    type="radio"
-                                    ref={refPreguntaCinco}
-                                    className="h-4 w-4 border-gray-300 text-red-900 focus:ring-red-900"
-                                    value={"si"}
-                                    checked={preguntaCinco === "si"}
-                                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                        setPreguntaCinco(event.target.value)
-                                    }} />
-                                <label htmlFor="radio-cinco-si" className="block text-xs font-medium leading-6 text-gray-900">Si</label>
-                            </div>
-                            <div className="flex items-center gap-x-3">
-                                <input
-                                    id="radio-cinco-no"
-                                    name="descartes-cinco"
-                                    type="radio"
-                                    className="h-4 w-4 border-gray-300 text-red-900 focus:ring-red-900"
-                                    value={"no"}
-                                    checked={preguntaCinco === "no"}
-                                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                        setPreguntaCinco(event.target.value)
-                                    }} />
-                                <label htmlFor="radio-cinco-no" className="block text-xs font-medium leading-6 text-gray-900">No</label>
-                            </div>
-                        </div>
-                    </fieldset>
+                        </fieldset>
+                    </div>
                 </div>
 
                 <br />
 
                 <legend className="mt-2 text-base leading-8 text-gray-600">
-                    <span>FLUJO REALIZADO: </span>
+
                     <span>
-                        <a className="text-red-700" >Consideraciones (*)</a>
+                        <a className="text-red-700" >Consideraciones SIJ (*)</a>
                     </span>
                 </legend>
 
@@ -834,6 +845,13 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
                 </div>
 
                 <br />
+
+                <legend className="mt-2 text-base leading-8 text-gray-600">
+
+                    <span>
+                        <a className="text-base" >FLUJO REALIZADO:</a>
+                    </span>
+                </legend>
                 <br />
                 {selectedFiles.map((selectedFile, index) => (
                     <div key={index} className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
@@ -858,7 +876,7 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
                                             className="relative block rounded-md bg-red-900 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-sm hover:bg-red-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-900 mb-4"
                                             onClick={() => handleUploadFileInput(index)}
                                         >
-                                            Cargar imagen
+                                            <RiImageAddFill />
                                         </button>
 
                                         {selectedFile.file && (
