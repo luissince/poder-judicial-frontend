@@ -16,18 +16,14 @@ jobs:
       - name: Checkout código
         uses: actions/checkout@v3
 
-        env:
-          VITE_APP_URL: ${{ secrets.VITE_APP_URL }}
-
-      - name: Mostrar secret
-        run: echo VITE_APP_URL
-
       - name: Crear archivo .env
         run: cp .env.example .env
 
       - name: Editar archivo .env
         run: |
           sed -i 's/VITE_URL_APP = ""/VITE_URL_APP = "${VITE_APP_URL}"/' .env
+        env:
+          VITE_APP_URL: ${{ secrets.VITE_APP_URL }}
 
       - name: Mostrar contenido del archivo .env
         run: cat .env
