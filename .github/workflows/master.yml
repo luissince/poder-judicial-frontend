@@ -21,7 +21,10 @@ jobs:
 
       - name: Editar archivo .env
         run: |
-          sed -i 's/VITE_URL_APP = ""/VITE_URL_APP = "https:\/\/tp.syssoftintegra.com\/servicios\/pj"/' .env
+          sed -i 's/VITE_URL_APP = ""/VITE_URL_APP = "${VITE_APP_URL}"/' .env
+        env:
+            VITE_APP_URL: ${{ secrets.VITE_APP_URL }}  # Aquí usamos la variable de entorno
+  
           
       - name: Mostrar contenido del archivo .env
         run: cat .env
