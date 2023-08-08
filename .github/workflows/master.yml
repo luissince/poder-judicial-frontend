@@ -21,11 +21,11 @@ jobs:
 
       - name: Editar archivo .env
         run: |
-          sed -i 's/VITE_URL_APP=""/VITE_URL_APP="https:\/\/tp.syssoftintegra.com/servicios/pj"/' .env
+          sed -i 's~VITE_URL_APP=""~VITE_URL_APP="https://tp.syssoftintegra.com/servicios/pj"~' .env
           
       - name: Mostrar contenido del archivo .env
         run: cat .env
-        
+
       - name: Create container
         run: docker-compose up --build -d
       # - name: Build the Docker image
