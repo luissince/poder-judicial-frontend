@@ -12,21 +12,25 @@ jobs:
 
     runs-on: self-hosted
 
+    env:
+      VITE_URL_APP: ${{ secrets.VITE_URL_APP }}
+      VITE_URL_SERVER_SEND_EVENT: ${{ secrets.VITE_URL_SERVER_SEND_EVENT }}
+
     steps:
       - name: Checkout código
         uses: actions/checkout@v3
 
-      - name: Crear archivo .env
-        run: cp .env.example .env
+      # - name: Crear archivo .env
+      #   run: cp .env.example .env
+      
+        # - name: Editar archivo .env
+        # run: |
+          # sed -i 's/VITE_URL_APP = ""/VITE_URL_APP = "${VITE_URL_APP}"/' .env
+        # env:
+          # VITE_APP_URL: ${{ secrets.VITE_URL_APP }}
 
-      - name: Editar archivo .env
-        run: |
-          sed -i 's/VITE_URL_APP = ""/VITE_URL_APP = "${VITE_URL_APP}"/' .env
-        env:
-          VITE_APP_URL: ${{ secrets.VITE_URL_APP }}
-
-      - name: Mostrar contenido del archivo .env
-        run: cat .env
+      # - name: Mostrar contenido del archivo .env
+      #   run: cat .env
 
       - name: Create container
         run: docker-compose up --build -d
