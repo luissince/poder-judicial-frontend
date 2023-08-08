@@ -13,7 +13,7 @@ jobs:
     runs-on: self-hosted
 
     env:  
-      VITE_URL_APP: hola
+      VITE_URL_APP: hola1
 
     steps:
       - name: Checkout código
@@ -32,7 +32,7 @@ jobs:
       
       - name: Editar archivo .env
         run: |
-          sed -i 's/VITE_URL_APP = ""/VITE_URL_APP = "hola"/' .env
+          sed -i "s/VITE_URL_APP = \"\"/VITE_URL_APP = \"$VITE_URL_APP\"/" .env
 
       - name: Mostrar contenido del archivo .env
         run: cat .env
