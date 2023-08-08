@@ -13,16 +13,26 @@ jobs:
     runs-on: self-hosted
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Create folder
-      run: echo "Hi Docker Image CI"
-    - name: Create container
-      run: docker-compose up --build -d
-    # - name: Build the Docker image
-      # run: sudo docker stop next-app && sudo docker rm next-app
-    # - name: Remove existing image
-      # run: sudo docker image rm next-app
-    # - name: Build Docker image
-      # run: sudo docker build -t next-app .
-    # - name: Run Docker container
-      # run: sudo docker run -d --name next-app --net=luis -p 3000:3000 next-app
+      - name: Checkout código
+        uses: actions/checkout@v3
+
+      - name: Crear archivo .env
+        run: cp .env.example .env
+
+      - name: Editar archivo .env
+        run: |
+          sed -i 's/VITE_URL_APP=""/VITE_URL_APP="https:\/\/tp.syssoftintegra.com/servicios/pj"/' .env
+          
+      - name: Mostrar contenido del archivo .env
+        run: cat .env
+        
+      - name: Create container
+        run: docker-compose up --build -d
+      # - name: Build the Docker image
+        # run: sudo docker stop next-app && sudo docker rm next-app
+      # - name: Remove existing image
+        # run: sudo docker image rm next-app
+      # - name: Build Docker image
+        # run: sudo docker build -t next-app .
+      # - name: Run Docker container
+        # run: sudo docker run -d --name next-app --net=luis -p 3000:3000 next-app
