@@ -32,7 +32,7 @@ jobs:
       
       - name: Editar archivo .env
         run: |
-          sed -i "s/VITE_URL_APP = \"\"/VITE_URL_APP = \"$VITE_URL_APP\"/" .env
+          sed -i "s~VITE_URL_APP = \"\"~VITE_URL_APP = \"$VITE_URL_APP\"~" .env
 
       - name: Mostrar contenido del archivo .env
         run: cat .env
