@@ -1,0 +1,16 @@
+version: '3'
+services:
+  next-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: next-app
+    networks:
+      - luis
+    ports:
+      - 5000:80
+    container_name: poder-judicial
+    restart: always
+networks:
+  luis:
+    external: true

@@ -15,7 +15,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Create folder
-      run: echo "Hi Docker Image C"
+      run: echo "Hi Docker Image CI"
     - name: Create container
       run: docker-compose up --build -d
     # - name: Build the Docker image
