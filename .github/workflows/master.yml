@@ -20,7 +20,7 @@ jobs:
           VITE_APP_URL: ${{ secrets.VITE_APP_URL }}
 
       - name: Mostrar secret
-        run: echo $VITE_APP_URL
+        run: echo VITE_APP_URL
 
       - name: Crear archivo .env
         run: cp .env.example .env
