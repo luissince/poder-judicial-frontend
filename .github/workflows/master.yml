@@ -21,9 +21,9 @@ jobs:
 
       - name: Editar archivo .env
         run: |
-          sed -i 's/VITE_URL_APP = ""/VITE_URL_APP = "${VITE_APP_URL}"/' .env
+          sed -i 's/VITE_URL_APP = ""/VITE_URL_APP = "${VITE_URL_APP}"/' .env
         env:
-          VITE_APP_URL: ${{ secrets.VITE_APP_URL }}
+          VITE_APP_URL: ${{ secrets.VITE_URL_APP }}
 
       - name: Mostrar contenido del archivo .env
         run: cat .env
