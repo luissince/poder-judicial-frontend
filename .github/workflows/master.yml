@@ -13,7 +13,7 @@ jobs:
     runs-on: self-hosted
 
     env:  
-      VITE_URL_APP: hola1
+      VITE_URL_APP: ${{ secrets.VITE_URL_APP }}
 
     steps:
       - name: Checkout código
