@@ -12,19 +12,23 @@ jobs:
 
     runs-on: self-hosted
 
-    env:
-      VITE_URL_APP: ${{ secrets.VITE_URL_APP }}
-      VITE_URL_SERVER_SEND_EVENT: ${{ secrets.VITE_URL_SERVER_SEND_EVENT }}
+    # env:
+    #   VITE_URL_APP: ${{ secrets.VITE_URL_APP }}
+    #   VITE_URL_SERVER_SEND_EVENT: ${{ secrets.VITE_URL_SERVER_SEND_EVENT }}
 
     steps:
       - name: Checkout código
         uses: actions/checkout@v3
 
-      - name: Mostrar env
-        run: echo $VITE_URL_APP
-
-      - name: Mostrar env1
-        run: echo VITE_URL_APP
+      - name: Verificar si la variable está vacía
+        run: |
+          if [ -z "$VITE_URL_APP" ]; then
+            echo "La variable de entorno VITE_URL_APP está vacía."
+          else
+            echo "La variable de entorno VITE_URL_APP contiene datos: $VITE_URL_APP"
+          fi
+        env:
+          VITE_URL_APP: ${{ secrets.VITE_URL_APP }}
 
       - name: Crear archivo .env
         run: cp .env.example .env
@@ -36,8 +40,8 @@ jobs:
       - name: Mostrar contenido del archivo .env
         run: cat .env
 
-      - name: Create container
-        run: docker-compose up --build -d
+      # - name: Create container
+      #   run: docker-compose up --build -d
       # - name: Build the Docker image
         # run: sudo docker stop next-app && sudo docker rm next-app
       # - name: Remove existing image
