@@ -24,7 +24,7 @@ jobs:
           if [ -z "$VITE_URL_APP" ]; then
             echo "La variable de entorno VITE_URL_APP está vacía."
           else
-            echo "La variable de entorno VITE_URL_APP contiene datos: $VITE_URL_APP"
+            echo "La variable de entorno VITE_URL_APP contiene datos: "$VITE_URL_APP""
           fi
 
       - name: Crear archivo .env
