@@ -836,7 +836,7 @@ const FormularioView = (props: RouteComponentProps<{}>) => {
 
                 <div className="mt-2">
                     <fieldset>
-                        <legend className="text-sm leading-6 text-gray-900"><span>- Adjuntar la caratula del expediente </span><span><a className="text-red-500" >(*)</a></span></legend>
+                        <legend className="text-sm leading-6 text-gray-900"><span>- Adjuntar la caratula del expediente :)</span><span><a className="text-red-500" >(*)</a></span></legend>
                         <legend className="text-sm leading-6 text-gray-900"><span>- Las capturas de pantalla deben ser completas </span><span><a className="text-red-500" >(*)</a></span></legend>
                         <legend className="text-sm leading-6 text-gray-900"><span>- Debe visualizarse el usuario y version del SIJ </span><span><a className="text-red-500" >(*)</a></span></legend>
                         <legend className="text-sm leading-6 text-gray-900"><span>- El PBTRACE.log debe adjuntarse de forma obligatoria en el ticket: </span><span><a className="text-red-500" href="https://drive.google.com/drive/folders/1tb-IgfclBNx_7HDBwE_hSrMGkkr_5ABT?usp=sharing" target="_blank">Click ver Manual (*)</a></span></legend>
